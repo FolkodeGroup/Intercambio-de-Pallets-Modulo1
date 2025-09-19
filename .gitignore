@@ -1,1 +1,21 @@
+
+# Directorios de entornos virtuales
 venv/
+.env/
+
+# Archivos de la base de datos SQLite
+db.sqlite3
+
+# Archivos de configuración local
+.vscode/
+*.env
+
+# Archivos de Python y de caché
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+
+# Archivos de caché generados por Django
+media/
+static/
