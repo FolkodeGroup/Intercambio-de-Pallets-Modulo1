@@ -15,8 +15,8 @@
 
 1. **Clonar el repositorio y entrar a la carpeta del módulo**
    ```bash
-   git clone https://github.com/FolkodeGroup/Congreso-UNAB.git
-   cd Congreso-UNAB/intercambio-de-pallets-modulo1
+   git clone https://github.com/FolkodeGroup/Intercambio-de-Pallets-Modulo1.git
+   cd Intercambio-de-Pallets-Modulo1.git
 ````
 
 2. **Crear y activar un entorno virtual (recomendado)**
@@ -45,6 +45,8 @@
 4. **Aplicar migraciones para crear la base de datos**
 
    ```bash
+   cd pallet_manager
+   cd mysite
    python manage.py migrate
    ```
 
