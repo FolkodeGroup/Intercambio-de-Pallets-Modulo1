@@ -73,3 +73,26 @@
 > `intercambio-de-pallets-modulo1/settings.py` antes de aplicar las migraciones.
 
 
+--
+Errores y correcciones
+1) Instalación
+
+1.error(error en la url del repo):
+-git clone https://github.com/FolkodeGroup/Congreso-UNAB.git
+-cd Congreso-UNAB/intercambio-de-pallets-modulo1
+
+correción: 
+git clone https://github.com/FolkodeGroup/Intercambio-de-Pallets-Modulo1.git
+cd Intercambio-de-Pallets-Modulo1.git
+
+4.error(no se encuentra el archivo porque está mal ubicado):
+-python manage.py migrate
+(existe una carpeta "mysite" dentro de pallet_manager, que dentro  tiene otra carpeta "mysite", dentro de la última carpeta "mysite" se encuentra el archivo manage.py)
+
+correción:
+Traer los archivos dentro de la última carpeta "mysite" hacia la carpeta pallet_manager para eliminar la duplicidad de carpetas "mysite" y corregir la ruta.
+
+cd pallet_manager
+cd mysite
+python manage.py migrate
+--
