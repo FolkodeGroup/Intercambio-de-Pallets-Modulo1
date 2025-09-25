@@ -107,3 +107,8 @@ Intercambio-de-Pallets-Modulo1/
 │       └─ ...
 ├─ requirements.txt
 └─ README.md
+
+##documentación de prueba de autenticación
+La documentación completa(con caturas y explicación) se encuentra en el siguiente archivo PDF:
+[ver documento en Google Drive]
+(https://drive.google.com/file/d/1qcSLThX36ie7ZifjgUlU3LJRc73oxeTI/view?usp=drive_link)
