@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'pallets',
+    'movimientos',
+    'empresas',
 ]
 
 MIDDLEWARE = [
