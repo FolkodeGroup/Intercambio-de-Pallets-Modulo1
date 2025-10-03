@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registrar Movimiento</title>
+</head>
+<body>
+    <h1>Registrar Movimiento</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <fieldset>
+            <legend>Datos del Movimiento</legend>
+            {{ movimiento_form.as_p }}
+        </fieldset>
+
+        <fieldset>
+            <legend>Detalle de Pallets</legend>
+            {{ formset.management_form }}
+            {% for form in formset %}
+                <div class="linea">
+                    {{ form.as_p }}
+                </div>
+            {% endfor %}
+        </fieldset>
+
+        <button type="submit">Guardar Movimiento</button>
+    </form>
+</body>
+</html>
