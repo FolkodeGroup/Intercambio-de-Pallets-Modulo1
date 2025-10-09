@@ -1,0 +1,25 @@
+<h1>Lista de Movimientos</h1>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Empresa</th>
+            <th>Tipo</th>
+            <th>Origen</th>
+            <th>Destino</th>
+            <th>Fecha</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for mov in movimientos %}
+        <tr>
+            <td>{{ mov.id }}</td>
+            <td>{{ mov.empresa }}</td>
+            <td>{{ mov.tipo }}</td>
+            <td>{{ mov.ubicacion_origen }}</td>
+            <td>{{ mov.ubicacion_destino }}</td>
+            <td>{{ mov.fecha_creacion }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
