@@ -1,46 +1,27 @@
+# pallet_manager/mysite/movimientos/admin.py
+
 from django.contrib import admin
-
-
-# Register your models here.
-
-'''
-Esto es solo para que el admin visualice los movimientos
-(lo uso para verificar que el formulario permita registrar los movimientos correctamente)
-'''
 from .models import Movimiento, LineaMovimiento
-# Inline para mostrar las líneas de cada movimiento
+
+# 1. Definimos el Inline para LineaMovimiento (permite editar el detalle dentro de la cabecera)
 class LineaMovimientoInline(admin.TabularInline):
     model = LineaMovimiento
+    extra = 1  # Muestra 1 línea vacía para agregar un nuevo detalle
+    # Campos que el usuario puede editar en el inline
     fields = ('tipo_pallet', 'cantidad', 'motivo')
-    readonly_fields = ('tipo_pallet', 'cantidad', 'motivo')
-    can_delete = False
-    extra = 0  # No mostrar filas vacías
 
-# Admin solo de lectura para Movimientos
+
+# 2. Registramos el modelo Movimiento e incluimos el Inline
 @admin.register(Movimiento)
 class MovimientoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'tipo', 'empresa', 'usuario_creacion', 'fecha_hora', 'estado_confirmacion')
-    list_filter = ('tipo', 'estado_confirmacion', 'fecha_hora', 'empresa')
-    search_fields = ('empresa__razon_social', 'doc_referencia', 'ubicacion_origen', 'ubicacion_destino')
-    ordering = ('-fecha_hora',)
-    inlines = [LineaMovimientoInline]
-    readonly_fields = (
-        'empresa',
-        'usuario_creacion',
-        'fecha_hora',
-        'tipo',
-        'ubicacion_origen',
-        'ubicacion_destino',
-        'doc_referencia',
-        'estado_confirmacion',
-        'observaciones',
-    )
-
-    def has_add_permission(self, request):
-        return False  # No permite agregar nuevos movimientos desde el admin
-
-    def has_change_permission(self, request, obj=None):
-        return False  # No permite editar movimientos
-
-    def has_delete_permission(self, request, obj=None):
-        return False  # No permite borrar movimientos
+    list_display = ("id", "tipo", "empresa", "estado_confirmacion", "usuario_creacion", "fecha_hora")
+    list_filter = ("tipo", "estado_confirmacion", "empresa")
+    search_fields = ("doc_referencia", "empresa__razon_social")
+    ordering = ("-fecha_hora",)
+    inlines = [LineaMovimientoInline] # Agregamos el detalle al formulario de la cabecera
+    
+    # Campo 'usuario_creacion' se auto-completa al guardar
+    def save_model(self, request, obj, form, change):
+        if not change: # Solo al crear el objeto por primera vez
+            obj.usuario_creacion = request.user
+        super().save_model(request, obj, form, change)
