@@ -6,6 +6,9 @@ from django.forms import modelformset_factory
 from .forms import MovimientoForm, LineaMovimientoForm
 from .models import LineaMovimiento, Movimiento
 
+def movimientos(request):
+    return render(request, "movimientos/movimientos.html")
+
 def registrar_movimiento(request):
     LineaFormSet = modelformset_factory(LineaMovimiento, form=LineaMovimientoForm, extra=1, can_delete=True)
 
@@ -14,7 +17,9 @@ def registrar_movimiento(request):
         formset = LineaFormSet(request.POST, queryset=LineaMovimiento.objects.none())
 
         if movimiento_form.is_valid() and formset.is_valid():
-            movimiento = movimiento_form.save()
+            movimiento = movimiento_form.save(commit=False)
+            movimiento.usuario_creacion = request.user
+            movimiento.save()
 
             # Guardar cada línea y asociarla al movimiento
             for form in formset:
@@ -23,7 +28,7 @@ def registrar_movimiento(request):
                     linea.movimiento = movimiento
                     linea.save()
 
-            return redirect("lista_movimientos")  # tenés que crear esta vista
+            return redirect("movimientos")  # tenés que crear esta vista
 
     else:
         movimiento_form = MovimientoForm()
@@ -34,6 +39,6 @@ def registrar_movimiento(request):
         "formset": formset,
     })
     
-def lista_movimientos(request):
+def movimientos(request):
     movimientos = Movimiento.objects.all()
-    return render(request, "movimientos/lista_movimientos.html", {"movimientos": movimientos})
+    return render(request, "movimientos/movimientos.html", {"movimientos": movimientos})

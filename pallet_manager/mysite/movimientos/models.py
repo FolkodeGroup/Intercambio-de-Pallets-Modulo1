@@ -216,10 +216,6 @@ class LineaMovimiento(models.Model):
         if self.cantidad <= 0:
             raise ValidationError("La cantidad debe ser mayor a cero.")
         
-        # Validar que el movimiento no esté confirmado antes de modificar
-        if self.movimiento.estado_confirmacion == Movimiento.EstadoConfirmacion.CONFIRMADO:
-            raise ValidationError("No se puede modificar una línea de movimiento confirmado.")
-    
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
