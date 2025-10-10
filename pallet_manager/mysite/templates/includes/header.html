@@ -1,9 +1,12 @@
 {% load static %}
 
-<header class="navbar navbar-dark bg-teal shadow-sm px-4 py-2 d-flex justify-content-between align-items-center" style="background-color: #003b3b;">
-  <div class="d-flex flex-direction-row align-items-center">
-    <img src="{% static 'img/logo_pallet.png' %}" alt="Pallet Manager Logo" height="40" class="me-2">
-    <h1 class="mb-0 fw-bold text-light">PALLET MANAGER</h1>
+<header class="navbar navbar-dark bg-teal shadow-sm px-4 py-2 d-flex align-items-center gap-4" style="background-color: #002D33;">
+  <div class="w-100 d-flex  align-items-center justify-content-space-betweens">
+    <h4 class="mb-0 ff-Nunito-Sans fw-bold text-light flex-grow-1">Dashboard</h4>
+    <div class="time-container">
+        <span id="reloj" class=""></span>
+        <span id="fecha" class=""></span>
+    </div>
   </div>
 </header>
 
