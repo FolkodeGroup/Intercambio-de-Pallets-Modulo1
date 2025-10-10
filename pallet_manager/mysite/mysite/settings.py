@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'pallets',
     'movimientos',
     'empresas',
+    'empleados',
 ]
 
 MIDDLEWARE = [
