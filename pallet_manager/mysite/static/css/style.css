@@ -1,0 +1,63 @@
+
+.sidebar {
+    background: #002D33; 
+    width: 270px;
+    height: 100vh;
+    background: #002D33;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 15px 0 0 0;
+}
+
+.nav-link{
+    display: flex;
+    align-items: center;
+    color: #F3F4F6;
+    border-radius: 8px;
+    padding: 10px 15px;
+    gap: 10px;
+}
+
+.nav-link:hover{
+    color: #002D33;
+    background-color: #0BC0A2;
+}
+
+.nav-link.active {
+    background-color: #0BC0A2;
+}
+
+.nav-link > svg{
+    transition: .15s fill ease-in-out;
+    font-size: 40px;
+    padding: 0;
+    margin-bottom: 2px;
+}
+
+.nav-link:hover svg{
+    fill: #002D33;
+}
+
+.sidebar-footer {
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.sidebar-footer button {
+    height: 50px;
+    border: none;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.sidebar-footer button:hover{
+    background-color: #D9D9D9;
+}
+
+.sidebar-footer button:hover,
+.sidebar-footer button:hover svg {
+    fill: #002D33;
+    color: #002D33;
+}
