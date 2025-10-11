@@ -18,4 +18,3 @@ __pycache__/
 
 # Archivos de caché generados por Django
 media/
-static/
