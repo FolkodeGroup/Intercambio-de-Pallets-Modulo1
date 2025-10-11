@@ -22,7 +22,7 @@ from django.contrib.auth import views as auth_views
 from users.views import index
 
 urlpatterns = [
-    path("movimientos/", include("movimientos.urls")),
+    path('movimientos/', include('movimientos.urls', namespace='movimientos')),
     path("polls/", include("polls.urls")),
     path('admin/', admin.site.urls),
     path('login/', auth_views.LoginView.as_view(), name='login'),
