@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <section>
+        <h2>Gestión de movimientos</h2>
+        <h1>Lista de Movimientos</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tipo</th>
+                    <th>Empresa</th>
+                    <th>Estado</th>
+                    <th>Usuario</th>
+                    <th>Fecha/Hora</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for movimiento in movimientos %}
+                <tr>
+                    <td>{{ movimiento.id }}</td>
+                    <td>{{ movimiento.tipo }}</td>
+                    <td>{{ movimiento.empresa }}</td>
+                    <td>{{ movimiento.estado_confirmacion }}</td>
+                    <td>{{ movimiento.usuario_creacion }}</td>
+                    <td>{{ movimiento.fecha_hora }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">No hay movimientos registrados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</body>
+</html>

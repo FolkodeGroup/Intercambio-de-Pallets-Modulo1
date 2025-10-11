@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import BaseInlineFormSet
 from .models import Movimiento, LineaMovimiento
 
 class MovimientoForm(forms.ModelForm):
@@ -36,13 +37,6 @@ class MovimientoForm(forms.ModelForm):
             }),
         }
 
-    def clean(self):
-        cleaned_data = super().clean()
-        ubicacion_origen = cleaned_data.get('ubicacion_origen')
-        ubicacion_destino = cleaned_data.get('ubicacion_destino')
-        if ubicacion_origen and ubicacion_destino and ubicacion_origen == ubicacion_destino:
-            raise forms.ValidationError("La ubicación de origen y destino no pueden ser iguales.")
-        return cleaned_data
 
 class LineaMovimientoForm(forms.ModelForm):
     class Meta:
@@ -53,22 +47,32 @@ class LineaMovimientoForm(forms.ModelForm):
             'cantidad': forms.NumberInput(attrs={
                 'class': 'form-control',
                 'min': '1',
-                'placeholder': 'Cantidad'
+                'placeholder': 'Ingrese cantidad de pallets'
             }),
             'motivo': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Motivo (Entrega, Devolución, etc.)'
+                'placeholder': 'Ej: Entrega, Devolución, Reparación...'
             }),
         }
 
-    def clean_cantidad(self):
+    def clean(self):
+        cleaned_data = super().clean()
         cantidad = self.cleaned_data.get('cantidad')
+        motivo = self.cleaned_data.get('motivo')
+        
+        #Validar cantidad
         if cantidad is None or cantidad <= 0:
             raise forms.ValidationError("La cantidad debe ser mayor que 0.")
-        return cantidad
-
-    def clean_motivo(self):
-        motivo = self.cleaned_data.get('motivo')
+        
+        #Validar motivo
         if motivo and len(motivo.strip()) < 3:
             raise forms.ValidationError("El motivo debe tener al menos 3 caracteres.")
-        return motivo
+
+        return cleaned_data
+    
+class LineaMovimientoFormSet(BaseInlineFormSet):
+    def clean(self):
+        super().clean()
+        # self.instance es el Movimiento padre
+        if self.instance and self.instance.estado_confirmacion == Movimiento.EstadoConfirmacion.CONFIRMADO:
+            raise forms.ValidationError("No se pueden modificar líneas de un movimiento confirmado.")
