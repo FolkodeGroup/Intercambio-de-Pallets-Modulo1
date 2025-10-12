@@ -6,9 +6,6 @@ from django.forms import modelformset_factory
 from .forms import MovimientoForm, LineaMovimientoForm
 from .models import LineaMovimiento, Movimiento
 
-def movimientos(request):
-    return render(request, "movimientos/movimientos.html")
-
 def registrar_movimiento(request):
     LineaFormSet = modelformset_factory(LineaMovimiento, form=LineaMovimientoForm, extra=1, can_delete=True)
 

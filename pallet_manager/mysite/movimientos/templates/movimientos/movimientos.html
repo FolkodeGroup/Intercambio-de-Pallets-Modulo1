@@ -1,48 +1,122 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block head %} 
+    <link rel="stylesheet" href="{% static 'movimientos/movimientos.css'%}">
+    <script src="{% static 'movimientos/movimientos.js' %}"></script>
+{% endblock %}
 
-
-
-<div>
-    {% block content %} 
-    {% include 'includes/sidebar.html'%}
-    <main>
-        <section>
-            <h2>Gestión de movimientos</h2>
-            <h1>Lista de Movimientos</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Tipo</th>
-                        <th>Empresa</th>
-                        <th>Estado</th>
-                        <th>Usuario</th>
-                        <th>Fecha/Hora</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for movimiento in movimientos %}
-                    <tr>
-                        <td>{{ movimiento.id }}</td>
-                        <td>{{ movimiento.tipo }}</td>
-                        <td>{{ movimiento.empresa }}</td>
-                        <td>{{ movimiento.estado_confirmacion }}</td>
-                        <td>{{ movimiento.usuario_creacion }}</td>
-                        <td>{{ movimiento.fecha_hora }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="6">No hay movimientos registrados.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </section>
-
-        </main>
-    {% endblock %}
+{% block content %}
+<div class="movimientos-container">
+    {% include 'includes/sidebar.html' %}
     
-</div>
+    <main class="movimientos-main">
+        
+        <h2 class="movimientos-main-title">Gestión de movimientos</h2>
 
+        <section class="movimientos-main-section">
+            <!-- Filtros -->
+            <div class="filters">
+                <div class="form-control">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>
+                    <input type="text" placeholder="Buscar...">
+                </div>
+                <div class="form-select">
+                    <span>Ordenar</span>
+                    <!--<select>
+                        <option selected>Ordenar</option>
+                        <option>Empresa</option>
+                        <option>Fecha</option>
+                        <option>Cantidad</option>
+                        <option>Tipo</option>
+                    </select>-->
+                    <div class="bar"></div>
+                    <svg  xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
+                </div>
+                <div class="form-select">
+                    <span>Ingreso/Egreso</span>
+                    <!--<select>
+                        <option selected>Ingreso / Egreso</option>
+                        <option>Ingreso</option>
+                        <option>Egreso</option>
+                    </select>-->
+                    <div class="bar"></div>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
+                </div>
+                <button class="btn btn-export" style="background: #01454F;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
+                      <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+                    </svg>
+                    Exportar CSV
+                </button>
+                <button class="btn btn-export" style="background: #01454F;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
+                      <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+                    </svg>
+                    Exportar PDF
+                </button>
+            </div>
+
+            <!-- Tabla -->
+            <div class="container-table" style="overflow-x: auto;">
+                <table id="tabla-movimientos" style="width: 100%; border-collapse: collapse; color: #ffffff; text-align: left; font-size: 0.95rem;">
+                    <thead style="background-color: #0D7A7F;">
+                        <tr>
+                            <th style="padding: 0.75rem;">Empresa</th>
+                            <th style="padding: 0.75rem;">Fecha / Hora</th>
+                            <th style="padding: 0.75rem;">Motivo</th>
+                            <th style="padding: 0.75rem;">Cantidad</th>
+                            <th style="padding: 0.75rem;">Tipo</th>
+                            <th style="padding: 0.75rem;">Responsable</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for movimiento in movimientos %}
+                            {% for linea in movimiento.lineas.all %}
+                                <tr style="background-color: #07494D; border-bottom: 1px solid #0D7A7F;">
+                                    <td style="padding: 0.75rem;">{{ movimiento.empresa }}</td>
+                                    <td style="padding: 0.75rem;">{{ movimiento.fecha_hora }}</td>
+                                    <td style="padding: 0.75rem;">{{ movimiento.tipo }}</td>
+                                    <td style="padding: 0.75rem;">{{ linea.cantidad }}</td>
+                                    <td style="padding: 0.75rem;">{{ linea.tipo_pallet }}</td>
+                                    <td style="padding: 0.75rem;">{{ movimiento.usuario_creacion }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" style="padding: 0.75rem;">No hay movimientos registrados.</td>
+                                </tr>
+                            {% endfor %} 
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+            
+        <!-- Ver más / Paginación -->
+        <div class="text-center my-3">
+            <button id="btn-more" class="btn btn-outline-light btn-more">Ver más</button>
+        </div>
+
+         <!-- Botones inferiores -->
+        <div class="pagination-buttons">
+            <button class="btn btn-success">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+                </svg>
+                Nuevo ingreso
+            </button>
+            <button class="btn btn-dark">
+                <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M80-80v-160h800v160H760v-80H540v80H420v-80H200v80H80Zm160-240q-17 0-28.5-11.5T200-360v-480q0-17 11.5-28.5T240-880h480q17 0 28.5 11.5T760-840v480q0 17-11.5 28.5T720-320H240Zm40-80h400v-400H280v400Zm80-240h240v-80H360v80Zm-80 240v-400 400Z"/></svg>
+                Gestionar stock
+            </button>
+            <button class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                </svg>
+                Nuevo egreso
+            </button>
+        </div>
+        
+    </main>
+</div>
+{% endblock %}
