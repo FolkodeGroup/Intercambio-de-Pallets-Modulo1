@@ -1,0 +1,41 @@
+{% extends "base_auth.html" %}
+{% load static %}
+{% block title %}Crear nueva cuenta | Pallet Manager{% endblock %}
+
+{% block content %}
+<div class="pm-auth-card">
+  <div class="text-center">
+    <img src="{% static 'img/logo-pallet.png' %}" alt="Pallet Manager" class="pm-logo">
+    <div class="pm-badge">Crear nueva cuenta</div>
+  </div>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="id_username" class="form-label">Nombre de usuario</label>
+      <input type="text" name="username" id="id_username" class="form-control pm-input" placeholder="Ingresá tu usuario">
+    </div>
+
+    <div class="mb-3">
+      <label for="id_email" class="form-label">Dirección de correo electrónico</label>
+      <input type="email" name="email" id="id_email" class="form-control pm-input" placeholder="ejemplo@correo.com">
+    </div>
+
+    <div class="mb-3">
+      <label for="id_password1" class="form-label">Contraseña</label>
+      <input type="password" name="password1" id="id_password1" class="form-control pm-input" placeholder="Mínimo 8 caracteres">
+    </div>
+
+    <div class="mb-3">
+      <label for="id_password2" class="form-label">Contraseña (confirmación)</label>
+      <input type="password" name="password2" id="id_password2" class="form-control pm-input" placeholder="Repetí la contraseña">
+    </div>
+
+    <button type="submit" class="btn pm-btn">Registrarme</button>
+  </form>
+
+  <div class="pm-footer-link">
+    ¿Ya tenés cuenta? <a href="{% url 'login' %}" class="pm-link">Iniciar sesión</a>
+  </div>
+</div>
+{% endblock %}
