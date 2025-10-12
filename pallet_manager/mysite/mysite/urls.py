@@ -25,7 +25,6 @@ urlpatterns = [
 
     # Home
     path('empleados/', include('empleados.urls')),
-    path('', index, name='index'),
 ]
 # --- ALIAS DE COMPATIBILIDAD (no tocan el código de tus compañeros) ---
 # Hace que {% url 'registrar_movimiento' %} funcione, redirigiendo a la ruta namespaced real.
