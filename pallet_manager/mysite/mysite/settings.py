@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'movimientos',
     'empresas',
     'empleados',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
