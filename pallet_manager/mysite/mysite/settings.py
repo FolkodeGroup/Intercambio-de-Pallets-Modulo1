@@ -72,9 +72,9 @@ TEMPLATES = [
 ]
 
 # Redirecciones de login/logout
-LOGIN_REDIRECT_URL = '/admin/'
-LOGOUT_REDIRECT_URL = '/login/'
-LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = 'index'      # tu vista: path('', index, name='index')
+LOGOUT_REDIRECT_URL = 'login'
+LOGIN_URL = 'login'
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
@@ -132,3 +132,9 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR / 'static')]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'users.CustomUser'
+
+LANGUAGE_CODE = 'es'
+TIME_ZONE = 'America/Argentina/Buenos_Aires'  # opcional, pero recomendado
+USE_I18N = True
+USE_TZ = True
+
