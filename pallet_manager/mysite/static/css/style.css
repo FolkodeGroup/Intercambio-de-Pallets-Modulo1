@@ -1,4 +1,8 @@
+body{
+    min-height: 100%;
+}
 .container-fluid{
+    height: 91vh;
     padding-left: 270px;
     margin: 0 !important;
 }
