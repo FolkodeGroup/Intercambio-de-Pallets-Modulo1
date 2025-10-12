@@ -12,7 +12,7 @@
     
     <main class="movimientos-main">
         
-        <h2 class="movimientos-main-title">Gestión de movimientos</h2>
+        <h4 class="movimientos-main-title">Gestión de movimientos</h4>
 
         <section class="movimientos-main-section">
             <!-- Filtros -->
@@ -21,27 +21,33 @@
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/></svg>
                     <input type="text" placeholder="Buscar...">
                 </div>
-                <div class="form-select">
-                    <span>Ordenar</span>
-                    <!--<select>
-                        <option selected>Ordenar</option>
-                        <option>Empresa</option>
-                        <option>Fecha</option>
-                        <option>Cantidad</option>
-                        <option>Tipo</option>
-                    </select>-->
-                    <div class="bar"></div>
-                    <svg  xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
+                <div class="form-motivo-container">
+                    <button id="ordenar-btn" class="form-select">
+                        <span>Ordenar</span>
+                        <div class="bar"></div>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
+                        
+                        <div id="menu-ordenar" class="dropdown-menu" style="display: none;">
+                            <span data-col="0">Empresa</span>
+                            <span data-col="1">Fecha</span>
+                            <span data-col="3">Cantidad</span>
+                            <span data-col="4">Tipo</span>
+                            <span data-col="5">Responsable</span>
+                        </div>
+                    </button>
                 </div>
-                <div class="form-select">
-                    <span>Ingreso/Egreso</span>
-                    <!--<select>
-                        <option selected>Ingreso / Egreso</option>
-                        <option>Ingreso</option>
-                        <option>Egreso</option>
-                    </select>-->
-                    <div class="bar"></div>
-                    <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
+                <div class="form-motivo-container">
+                    <button id="filtro-btn" class="form-select">
+                        <span>Ingreso/Egreso</span>
+                        <div class="bar"></div>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
+                        
+                        <div id="menu-tipo" class="menu-opciones" style="display: none;">
+                            <span data-tipo="todos" class="activo">Todos</span>
+                            <span data-tipo="ingreso">Ingresos</span>
+                            <span data-tipo="egreso">Egresos</span>
+                        </div>
+                    </button>
                 </div>
                 <button class="btn btn-export" style="background: #01454F;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark" viewBox="0 0 16 16">
@@ -81,11 +87,12 @@
                                     <td style="padding: 0.75rem;">{{ linea.tipo_pallet }}</td>
                                     <td style="padding: 0.75rem;">{{ movimiento.usuario_creacion }}</td>
                                 </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="6" style="padding: 0.75rem;">No hay movimientos registrados.</td>
-                                </tr>
-                            {% endfor %} 
+                                {% endfor %} 
+                            {% empty %}
+                            <tr>
+                                <td colspan="6" style="padding: 0.75rem;">No hay movimientos registrados.</td>
+                            </tr>
+                            
                         {% endfor %}
                     </tbody>
                 </table>
@@ -93,28 +100,37 @@
         </section>
             
         <!-- Ver más / Paginación -->
-        <div class="text-center my-3">
-            <button id="btn-more" class="btn btn-outline-light btn-more">Ver más</button>
+        <div class="text-center my-1">
+            <button id="btn-more" class="btn btn-outline-light btn-more" style="background-color: #002D33">Ver más</button>
         </div>
 
          <!-- Botones inferiores -->
         <div class="pagination-buttons">
-            <button class="btn btn-success">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
-                </svg>
-                Nuevo ingreso
-            </button>
-            <button class="btn btn-dark">
-                <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M80-80v-160h800v160H760v-80H540v80H420v-80H200v80H80Zm160-240q-17 0-28.5-11.5T200-360v-480q0-17 11.5-28.5T240-880h480q17 0 28.5 11.5T760-840v480q0 17-11.5 28.5T720-320H240Zm40-80h400v-400H280v400Zm80-240h240v-80H360v80Zm-80 240v-400 400Z"/></svg>
-                Gestionar stock
-            </button>
-            <button class="btn btn-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
-                </svg>
-                Nuevo egreso
-            </button>
+            <a href="{% url 'registrar_movimiento'%}" class="pagination-links">
+                <button class="btn btn-success" style="background-color: #002D33;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+                    </svg>
+                    Nuevo ingreso
+                </button>
+            </a>
+            
+            <a href="#" class="pagination-links">
+                <button class="btn btn-dark" style="background-color: #002D33;">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M80-80v-160h800v160H760v-80H540v80H420v-80H200v80H80Zm160-240q-17 0-28.5-11.5T200-360v-480q0-17 11.5-28.5T240-880h480q17 0 28.5 11.5T760-840v480q0 17-11.5 28.5T720-320H240Zm40-80h400v-400H280v400Zm80-240h240v-80H360v80Zm-80 240v-400 400Z"/></svg>
+                    Gestionar stock
+                </button>
+            </a>
+            
+            <a href="#" class="pagination-links">
+                <button class="btn btn-primary" style="background: #002D33;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                    </svg>
+                    Nuevo egreso
+                </button>
+            </a>
+            
         </div>
         
     </main>

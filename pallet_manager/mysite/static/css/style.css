@@ -1,4 +1,12 @@
+body{
+    min-height: 100%;
+}
 
+.container-fluid{
+    height: 91vh;
+    padding-left: 270px;
+    margin: 0 !important;
+}
 .sidebar {
     background: #002D33; 
     width: 270px;

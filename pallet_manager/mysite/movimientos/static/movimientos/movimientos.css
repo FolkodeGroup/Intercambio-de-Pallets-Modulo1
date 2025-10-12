@@ -2,7 +2,6 @@
     width: 100%;
     display: flex;
     flex-direction: row;
-    
     padding: 10px 20px 0 20px;
 }
 .movimientos-main{
@@ -10,10 +9,12 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    gap: 5px;
     align-items: center;
 }
 .movimientos-main-title{
     align-self: self-start;
+    margin: 20px 0;
 }
 .movimientos-main-section{
     width: 100%;
@@ -59,11 +60,78 @@
     color: #9F9F9F;
     fill:#9F9F9F;
 }
+
 .form-select{
+    padding-left: 20px;
     position: relative;
 }
 .form-select span{
+    text-align: start;
     flex: 1;
+}
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #00393d;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    margin-top: 5px;
+    padding: 5px 0;
+    display: flex;
+    flex-direction: column;
+    width: 150px;
+    z-index: 10;
+}
+
+.dropdown-menu span {
+    color: #e3e3e3;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.dropdown-menu span:hover {
+    background-color: #0D7A7F !important;
+}
+#menu-ordenar span.activo {
+    background-color: #0BC0A2 !important;
+    color: white;
+}
+
+.menu-opciones {
+    position: absolute;
+    top: 100%; /* debajo del botón */
+    left: 0;
+    background-color: #00393d;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0;
+    display: none;
+    flex-direction: column;
+    min-width: 120px;
+    z-index: 10;
+}
+
+.menu-opciones span {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    color: #e3e3e3;
+    transition: background 0.2s;
+}
+
+.menu-opciones span:hover {
+    background-color: #07494D;
+}
+
+/* Filtro activo */
+.menu-opciones span.activo {
+    background-color: #0BC0A2;
+    color: white;
 }
 .form-select .bar{
     position: absolute;
@@ -87,19 +155,26 @@
 .table td, .table th {
     color: #002D33 !important;  /* o display: none */
 }
-
+.btn-more{
+    font-size: 20px;
+    padding: 5px 0;
+    width: 400px;
+}
 .btn-more:hover{
-    background-color: #0BC0A2;
+    background-color: #0BC0A2 !important;
     color: #002D33;
 }
 
 .pagination-buttons{
+    margin-top: 20px;
     width: 100%;
     display: flex;
     justify-content: space-between;
     padding: 0 100px;
 }
-
+.pagination-links{
+    text-decoration: none;
+}
 .pagination-buttons svg{
     width: 50px;
     height: 50px;
@@ -114,7 +189,7 @@
 }
 
 .pagination-buttons button:hover{
-    background-color: #0BC0A2;
+    background: #0BC0A2 !important;
 }
 
 .pagination-buttons button:hover,
