@@ -1,4 +1,7 @@
-
+.container-fluid{
+    padding-left: 270px;
+    margin: 0 !important;
+}
 .sidebar {
     background: #002D33; 
     width: 270px;

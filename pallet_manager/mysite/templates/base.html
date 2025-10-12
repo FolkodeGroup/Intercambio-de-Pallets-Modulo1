@@ -11,13 +11,15 @@
 
     <!-- CSS global -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Bloque para CSS o scripts específicos de cada app -->
+    {% block head %}{% endblock %}
     
 </head>
 <body style="background: #01454F;">
     {% include 'includes/header.html'%}
-    {% include 'includes/sidebar.html' %}
 
-    <div class="container mt-4">
+    <div class="container-fluid mt-4">
         {% block content %}
         <!-- El contenido de las otras páginas (hijas) se insertará aquí -->
         
