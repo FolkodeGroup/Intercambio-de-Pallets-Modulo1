@@ -114,8 +114,11 @@ document.addEventListener("DOMContentLoaded", function () {
             fila.style.display = i < mostradas ? "" : "none";
         });
 
+        // 🔹 Mostrar u ocultar el botón según si hay más filas disponibles
         if (mostradas >= filas.length) {
             boton.style.display = "none";
+        } else {
+            boton.style.display = ""; // vuelve a mostrarse si hay más filas
         }
     }
 
@@ -126,3 +129,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
     actualizarTabla();
 });
+
