@@ -1,0 +1,24 @@
+<div class="row text-center align-items-center">
+    <div class="col-md-5">
+        <div class="mb-3">
+            <h4 class="h5 text-success">Disponibles</h4>
+            <p class="display-6 mb-0">{{ balance_stock.disponibles|default:"0" }}</p>
+        </div>
+        <div class="mb-3">
+            <h4 class="h5 text-warning">En uso</h4>
+            <p class="display-6 mb-0">{{ balance_stock.en_uso|default:"0" }}</p>
+        </div>
+        <div>
+            <h4 class="h5 text-danger">Dañados</h4>
+            <p class="display-6 mb-0">{{ balance_stock.danados|default:"0" }}</p>
+        </div>
+    </div>
+    
+    <div class="col-md-7">
+        <div class="pm-mock-chart text-center p-4 border rounded" style="background-color: #0d2e33;">
+            <p class="text-muted small mb-1">Área para Gráfico Donut</p>
+            <h5 class="h2 text-light">{{ balance_stock.total|default:"0" }} Pallets</h5>
+            <p class="text-muted small">Datos totales (Mock)</p>
+        </div>
+    </div>
+</div>
