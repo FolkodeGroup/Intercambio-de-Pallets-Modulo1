@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 {% load static %}
 
@@ -5,65 +6,41 @@
 
 {% block content %}
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3">Dashboard</h1>
-    <div class="small text-muted">
-        {{ header.hora }} | {{ header.fecha }}
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-4 ps-3 pt-4">
+    <h1 class="h5 text-light fw-bold">Resumen general</h1>
 </div>
 
 <div class="row mb-4">
     
     <div class="col-lg-6 mb-4">
-        <div class="card pm-card h-100">
-            <div class="card-header pm-card-header">
-                Resumen general de Stock
-            </div>
-            <div class="card-body">
-                {% include 'includes/_balance_stock.html' %}
+        <div class="px-3 h-100">
+            <div class="card pm-card h-100">
+                <div class="card-header pm-card-header text-center border-0 rounded-top"> 
+                    <h5 class="mb-0 fw-bold text-white">Balance de pallets por estado</h5>
+                </div>
+                
+                <div class="card-body p-0 rounded-bottom-0"> 
+                    {% include 'includes/_balance_stock.html' %}
+                </div>
             </div>
         </div>
     </div>
 
     <div class="col-lg-6 mb-4">
         <div class="card pm-card h-100">
-            <div class="card-header pm-card-header">
-                Balance por Empresa (Movimientos)
+            <div class="card-header pm-card-header text-center border-0 rounded-top"> 
+                <h5 class="mb-0 fw-bold text-white">Balance por empresa</h5>
             </div>
-            <div class="card-body p-0">
+            
+            <div class="card-body p-0 rounded-bottom"> 
                 {% include 'includes/_balance_empresas.html' %}
             </div>
         </div>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-12">
-        <h2 class="h5 mb-3">Accesos rápidos</h2>
-    </div>
-    
-    <div class="col-sm-4 col-md-4 col-lg-4 mb-3">
-        <a href="{% url 'movimientos:movimientos' %}" class="pm-quick-access-card d-block text-center p-4">
-            <i class="fas fa-truck-moving fa-2x mb-2"></i>
-            <p class="mb-0">Movimientos</p>
-        </a>
-    </div>
-    
-    <div class="col-sm-4 col-md-4 col-lg-4 mb-3">
-        <a href="#" class="pm-quick-access-card d-block text-center p-4">
-            <i class="fas fa-building fa-2x mb-2"></i>
-            <p class="mb-0">Empresas</p>
-        </a>
-    </div>
-
-    {% if es_admin %}
-    <div class="col-sm-4 col-md-4 col-lg-4 mb-3">
-        <a href="#" class="pm-quick-access-card d-block text-center p-4">
-            <i class="fas fa-users fa-2x mb-2"></i>
-            <p class="mb-0">Empleados</p>
-        </a>
-    </div>
-    {% endif %}
+<div class="px-3">
+    {% include 'includes/_accesos_rapidos.html' %}
 </div>
 
 {% endblock %}

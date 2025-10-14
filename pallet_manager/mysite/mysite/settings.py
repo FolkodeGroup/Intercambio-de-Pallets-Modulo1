@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'empresas',
     'empleados',
     'dashboard',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
