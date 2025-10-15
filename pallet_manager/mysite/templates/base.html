@@ -12,6 +12,7 @@
     <!-- CSS global -->
     <!-- Se añade un timestamp para forzar la recarga del CSS y evitar problemas de caché -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}?v={% now 'U' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- Bloque para CSS o scripts específicos de cada app -->
     {% block head %}{% endblock %}

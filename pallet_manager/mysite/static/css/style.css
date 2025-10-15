@@ -77,62 +77,59 @@ body{
     color: #002D33;
 }
 
-/* --- INICIO ESTILOS DASHBOARD (PM) MAQUETA FINAL Y AGRESIVA --- */
-/* --- INICIO ESTILOS DASHBOARD (PM) MAQUETA FINAL Y AGRESIVA --- */
 
-/* 1. Tarjetas Principales (Cards) - FONDO OSCURO Y SIN BORDES VISIBLES */
 .pm-card {
     background-color: #0d2e33 !important; 
     border: none !important; 
     border-radius: 12px !important;
-    color: #F3F4F6 !important; /* Texto de la tarjeta en claro */
+    color: #F3F4F6 !important; 
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important;
 }
 
 .pm-card-header {
     background-color: #002D33 !important; 
-    border-bottom: 1px solid #0BC0A2 !important; /* Línea de separación verde */
     color: #0BC0A2 !important;
 }
 
-/* 2. SOLUCIÓN AL FONDO DEL STOCK: FORZAR EL GRIS CLARO (Figma) */
 .pm-stock-container {
-    background-color: #F3F4F6 !important; /* Fondo gris muy claro del Figma */
-    border-radius: 0 0 12px 12px !important; /* Redondea solo las esquinas inferiores */
+    background-color: #F3F4F6 !important;
+    border-radius: 0 0 12px 12px !important; 
     padding: 1.5rem !important; 
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    /* Se elimina el margen negativo que causaba el desbordamiento */
     margin: 0 !important; 
 }
-/* **FIN MODIFICACIÓN (Mantener este bloque)** */
 
-/* 3. Accesos Rápidos (Botones/Tarjetas inferiores) - CORRECCIÓN CLAVE */
+.pm-quick-access-bar {
+    background-color: #0d2e33 !important; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important; 
+    border-radius: 12px !important;
+}
+
 .pm-quick-access-card {
-    background-color: #002D33 !important; 
-    border: none !important; 
+    background-color: #002D33 !important; /* Tono más oscuro para contrastar con el contenedor */
     border-radius: 10px !important;
-    text-decoration: none !important; 
+    border: 1px solid #0d2e33 !important; /* Borde sutil para definir el botón */
     transition: background-color 0.2s; 
-    /* Usar flexbox para centrar contenido y mejor padding */
+    height: 100%; 
+}
+
+.pm-quick-access-card .card-body {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem 1rem !important; /* Más padding para que se vean grandes */
-    height: 100%; /* Asegura que todos los botones tengan la misma altura si están en una fila */
+    padding: 1.5rem 1rem !important;
 }
 
 .pm-quick-access-card p, 
 .pm-quick-access-card i, 
 .pm-quick-access-card svg { 
-    color: #0BC0A2 !important;
-    /* Aumentar el tamaño del ícono para que coincida con Figma */
+    color: #F3F4F6 !important; /* Color de texto estándar del proyecto (gris claro) */
     font-size: 3rem !important; 
     transition: color 0.2s; 
     line-height: 1; 
 }
 
-/* Estilo específico para el texto de los accesos rápidos */
 .pm-quick-access-card p {
     font-size: 1rem !important; 
     font-weight: 600 !important;
@@ -149,10 +146,6 @@ body{
     color: #002D33 !important; 
 }
 
-
-
-
-/* 4. Tablas (Ajuste para que se vea dentro de la tarjeta oscura) */
 .table {
     --bs-table-bg: #0d2e33; 
     --bs-table-color: #F3F4F6; 
@@ -168,7 +161,6 @@ body{
     --bs-table-color: #fff;
 }
 
-/* 5. Botón "Ver más" */
 .pm-btn-view-more {
     color: #0BC0A2 !important;
     border: 1px solid #0BC0A2 !important;
@@ -179,5 +171,3 @@ body{
     color: #002D33 !important;
     background-color: #0BC0A2 !important;
 }
-
-/* --- FIN ESTILOS DASHBOARD (PM) MAQUETA FINAL Y AGRESIVA --- */
