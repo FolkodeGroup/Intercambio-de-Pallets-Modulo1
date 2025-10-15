@@ -25,7 +25,7 @@ def registrar_movimiento(request):
                     linea.movimiento = movimiento
                     linea.save()
 
-            return redirect("movimientos")  # tenés que crear esta vista
+            return redirect("movimientos:movimientos")  # tenés que crear esta vista
 
     else:
         movimiento_form = MovimientoForm()
