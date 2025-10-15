@@ -1,30 +1,44 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Registrar Movimiento</title>
-</head>
-<body>
-    <h1>Registrar Movimiento</h1>
+{% extends 'base.html' %}
+{% load static %}
 
-    <form method="post">
-        {% csrf_token %}
-        
-        <fieldset>
-            <legend>Datos del Movimiento</legend>
-            {{ movimiento_form.as_p }}
-        </fieldset>
+{% block head %}
+    <link rel="stylesheet" href="{% static 'movimientos/movimientos.css' %}">
+    <!-- Si necesitas JS adicional para el formset, agrégalo aquí -->
+{% endblock %}
 
-        <fieldset>
-            <legend>Detalle de Pallets</legend>
-            {{ formset.management_form }}
-            {% for form in formset %}
-                <div class="linea">
-                    {{ form.as_p }}
+{% block content %}
+<div class="movimientos-container">
+    {% include 'includes/sidebar.html' %}
+
+    <main class="movimientos-main">
+        <h4 class="movimientos-main-title">Registrar Movimiento</h4>
+
+        <section class="movimientos-main-section">
+            <form method="post" style="color: #ffffff;">
+                {% csrf_token %}
+
+                <fieldset style="border: 1px solid #0D7A7F; padding: 1.25rem; margin-bottom: 1.5rem; border-radius: 6px; background-color: #07494D;">
+                    <legend style="color: #e3e3e3; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.75rem;">Datos del Movimiento</legend>
+                    {{ movimiento_form.as_p }}
+                </fieldset>
+
+                <fieldset style="border: 1px solid #0D7A7F; padding: 1.25rem; margin-bottom: 1.5rem; border-radius: 6px; background-color: #07494D;">
+                    <legend style="color: #e3e3e3; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.75rem;">Detalle de Pallets</legend>
+                    {{ formset.management_form }}
+                    {% for form in formset %}
+                        <div class="linea" style="margin-bottom: 1rem; padding: 0.75rem; background-color: #0D7A7F; border-radius: 4px;">
+                            {{ form.as_p }}
+                        </div>
+                    {% endfor %}
+                </fieldset>
+
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <button type="submit" class="btn btn-success" style="background-color: #002D33; border: none; padding: 0.5rem 1.5rem; font-size: 1rem; color: white; border-radius: 4px;">
+                        Guardar Movimiento
+                    </button>
                 </div>
-            {% endfor %}
-        </fieldset>
-
-        <button type="submit">Guardar Movimiento</button>
-    </form>
-</body>
-</html>
+            </form>
+        </section>
+    </main>
+</div>
+{% endblock %}
