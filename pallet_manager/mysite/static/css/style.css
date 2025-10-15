@@ -99,6 +99,31 @@ body{
     margin: 0 !important; 
 }
 
+/* 3. Círculos de Estado (Componente reutilizable) */
+.pm-status-circle {
+    height: 90px;
+    width: 90px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-width: 2px;
+    border-style: solid;
+}
+.pm-status-circle--disponible {
+    background-color: #E8F5E9;
+    border-color: #81C784;
+}
+.pm-status-circle--en-uso {
+    background-color: #FFF3E0;
+    border-color: #FFCC80;
+}
+.pm-status-circle--dañado {
+    background-color: #FFEBEE;
+    border-color: #EF9A9A;
+}
+
 .pm-quick-access-bar {
     background-color: #0d2e33 !important; 
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important; 

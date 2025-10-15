@@ -4,24 +4,21 @@
         
         <div class="text-center">
             <p class="mb-2 fw-normal small text-dark">Disponibles</p>
-            <div class="rounded-circle d-flex flex-column align-items-center justify-content-center" 
-                 style="background-color: #E8F5E9; height: 90px; width: 90px; border: 2px solid #81C784;"> 
+            <div class="pm-status-circle pm-status-circle--disponible"> 
                 <h5 class="fw-bold mb-0 text-dark">{{ disponibles|default:"0000" }}</h5>
             </div>
         </div>
 
         <div class="text-center">
             <p class="mb-2 fw-normal small text-dark">En uso</p>
-            <div class="rounded-circle d-flex flex-column align-items-center justify-content-center" 
-                 style="background-color: #FFF3E0; height: 90px; width: 90px; border: 2px solid #FFCC80;"> 
+            <div class="pm-status-circle pm-status-circle--en-uso"> 
                 <h5 class="fw-bold mb-0 text-dark">{{ en_uso|default:"0000" }}</h5>
             </div>
         </div>
 
         <div class="text-center">
             <p class="mb-2 fw-normal small text-dark">Dañados</p>
-            <div class="rounded-circle d-flex flex-column align-items-center justify-content-center" 
-                 style="background-color: #FFEBEE; height: 90px; width: 90px; border: 2px solid #EF9A9A;"> 
+            <div class="pm-status-circle pm-status-circle--dañado"> 
                 <h5 class="fw-bold mb-0 text-dark">{{ dañados|default:"0000" }}</h5>
             </div>
         </div>
