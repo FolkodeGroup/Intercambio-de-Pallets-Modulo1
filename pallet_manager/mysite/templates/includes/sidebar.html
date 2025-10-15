@@ -70,3 +70,19 @@
     </div>
   </aside>
 </div>
+{% load static %}
+<aside class="sidebar">
+  <div class="px-3 py-3">
+    <img src="{% static 'img/logo-pallet.png' %}" alt="Pallet Manager" style="height:38px">
+  </div>
+  <nav class="nav flex-column px-2">
+    <a class="nav-link" href="{% url 'index' %}">Dashboard</a>
+    <a class="nav-link" href="{% url 'empresas' %}">Empresas</a>
+    <a class="nav-link" href="{% url 'empleados' %}">Empleados</a>
+    <a class="nav-link" href="{% url 'movimientos:movimientos' %}">Movimientos</a>
+  </nav>
+  <div class="mt-auto px-3 py-3">
+    <div class="small opacity-75 mb-2">Administrador</div>
+    <a class="btn btn-outline-light w-100" href="{% url 'logout' %}">Salir</a>
+  </div>
+</aside>
