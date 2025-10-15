@@ -7,6 +7,7 @@ urlpatterns = [
     path('movimientos/', include('movimientos.urls', namespace='movimientos')),
     path("polls/", include("polls.urls")),
     path('admin/', admin.site.urls),
+    path('dashboard/', include('dashboard.urls')),
 
     # Auth
     path('login/', RememberMeLoginView.as_view(), name='login'),
