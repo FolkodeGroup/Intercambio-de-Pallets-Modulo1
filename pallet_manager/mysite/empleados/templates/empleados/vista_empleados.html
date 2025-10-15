@@ -1,6 +1,9 @@
+
 {% extends 'base.html' %}
 {% load static %}
+
 {% block content %}
+
 <div>
    
     <main>
@@ -10,17 +13,41 @@
             <form>
                 <label>
                     <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-                    <input type="search", placeholder="Buscar">
+                    <input 
+                    
+                        type="search"
+                        placeholder="Buscar" 
+                        class="form-control"
+                        >
                 </label>
             </form>
-            <button href="">+ Nuevo empleado</button>
+            <button href="" class="btn">+ Nuevo empleado</button>
         </nav>
 
-        <table>
-            <h1>Empleados</h1>
-            
-        </table>
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th>Apellido</th>
+                    <th>Nombre</th>
+                    <th>DNI</th>
+                    <th>Telefono</th>
+                    <th></th>
+                </tr>
 
+            </thead>
+            <tbody>
+                <td>Ovejero</td>
+                <td>Agustin</td>
+                <td>45000000</td>
+                <td>116666666</td>
+                <td>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-baseline-density-small"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 3h16" /><path d="M4 9h16" /><path d="M4 15h16" /><path d="M4 21h16" /></svg>
+                </td>
+            </tbody>
+        </table>
+        <div>
+            <button href="" class="btn">Ver mas</button>
+        </div>
         
     </main>
     
