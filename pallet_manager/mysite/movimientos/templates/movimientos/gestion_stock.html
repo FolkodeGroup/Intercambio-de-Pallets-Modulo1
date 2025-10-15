@@ -1,0 +1,317 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gestión de stock</title>
+
+  <!-- Bootstrap y Bootstrap Icons (solo para los íconos del sidebar) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- (opcional) tu css existente -->
+  <link rel="stylesheet" href="{% static 'movimientos/movimientos.css' %}">
+
+  <style>
+    /* ===== Layout ===== */
+    body{background:#03393D;color:#fff}
+    .page-wrap{display:flex;min-height:100vh}
+    .content{flex:1;padding:16px}
+
+    /* ===== Sidebar local ===== */
+    .sidebar{width:240px;background:#073a3e;color:#e6fffb;display:flex;flex-direction:column}
+    .sidebar .brand{padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+    .sidebar .nav a{display:flex;gap:10px;align-items:center;padding:10px 18px;color:#e6fffb;text-decoration:none;border-radius:10px;margin:6px 10px;font-weight:500}
+    .sidebar .nav a:hover{background:#0d555a}
+    .sidebar .nav .active{background:#15a9a1;color:#012b2b}
+    .sidebar .nav i{font-size:1.1rem;opacity:.9}
+    .sidebar .foot{margin-top:auto;padding:14px 18px;border-top:1px solid rgba(255,255,255,.08);opacity:.85;font-size:.9rem}
+
+    /* ===== Donuts (idénticos, fijos) ===== */
+    .row-compact{display:flex; gap:12px; align-items:stretch; flex-wrap:wrap}
+    .row-compact > *{flex:1 1 0; min-width:250px}
+    .counter-card{background:#0E6166;color:#fff;border-radius:14px;padding:12px;display:flex;gap:14px;align-items:center;min-height:96px}
+    /* unificamos el fondo de los 3 */
+    .counter-card.alt-1,
+    .counter-card.alt-2{background:#0E6166}
+    .counter-title{font-weight:600;font-size:.95rem;margin:0;opacity:.9}
+
+    .donut{width:78px;height:78px;flex:0 0 78px;display:block}
+    .donut circle{fill:transparent;stroke-linecap:round}
+    .donut .bg{stroke:#e6eceb;stroke-width:3}
+    .donut .ring{stroke-width:3}  /* mismo grosor en los tres */
+    .donut text{font:700 12px/1 system-ui,-apple-system,"Segoe UI",Roboto,Arial;fill:#fff;dominant-baseline:middle}
+
+    /* ===== Tabla ===== */
+    .table-wrap{overflow-x:auto; background:#052e31; border-radius:10px}
+    .table-morph{width:100%; border-collapse:collapse; font-size:.95rem}
+    .table-morph thead{background:#0D7A7F;color:#fff}
+    .table-morph th, .table-morph td{padding:.65rem .75rem}
+    .table-morph tbody tr{background:#07494D;color:#fff;border-bottom:1px solid #0D7A7F}
+
+    /* ===== Form ===== */
+    .form-stock{background:#d9d9d9;border-radius:16px;padding:12px;max-width:460px;margin:12px auto 0;color:#000}
+    .form-label{font-weight:600}
+    .form-select, .form-control{border-radius:10px}
+    .form-control, .form-select{width:100%;max-width:100%}
+    .btn-morph{background:#002D33;color:#fff;border:0;padding:.55rem .9rem;border-radius:10px}
+    .btn-morph:disabled{opacity:.6}
+    .footer-actions{display:flex;justify-content:center;margin-top:10px}
+    .form-stock #fld-cantidad{height:42px;padding:.4rem .6rem;font-size:.95rem;box-sizing:border-box}
+    /* ===== Modal oscuro (Opción B) ===== */
+.modal-content{
+  background:#0E6166;   /* fondo */
+  color:#fff;           /* texto */
+}
+.modal-header, .modal-footer{
+  border-color: rgba(255,255,255,.15);
+}
+.modal-title{
+  color:#fff;
+}
+.btn-close{
+  filter: invert(1);    /* hace la X blanca */
+}
+
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- Sidebar LOCAL con íconos -->
+  <aside class="sidebar">
+    <div class="brand">
+      <!-- CORREGIDO: nombre del archivo (underscore) -->
+      <img src="{% static 'img/logo_pallet.png' %}" alt="Pallet Manager" style="height:38px">
+    </div>
+    <nav class="nav">
+      <a href="/"><i class="bi bi-speedometer2"></i> <span>Dashboard</span></a>
+      <a href="/empresas/"><i class="bi bi-buildings"></i> <span>Empresas</span></a>
+      <a href="/empleados/"><i class="bi bi-people"></i> <span>Empleados</span></a>
+      <a class="active" href="/movimientos/"><i class="bi bi-box-seam"></i> <span>Movimientos</span></a>
+    </nav>
+    <div class="foot">
+      <div class="mb-2">Administrador</div>
+      <a class="btn btn-outline-light w-100" href="/logout/">Salir</a>
+    </div>
+  </aside>
+
+  <!-- Contenido -->
+  <main class="content">
+    <h4 class="mb-3">Gestión de stock</h4>
+
+    <!-- Donuts (solo número dentro) -->
+    <div class="row-compact">
+      <div class="counter-card">
+        <svg class="donut" viewBox="0 0 36 36" aria-hidden="true">
+          <circle class="bg" cx="18" cy="18" r="15.915"></circle>
+          <circle class="ring" cx="18" cy="18" r="15.915" stroke="#00D3B7"></circle>
+          <text x="18" y="18" text-anchor="middle">{{ contadores.disponibles|default:0 }}</text>
+        </svg>
+        <p class="counter-title">Disponibles</p>
+      </div>
+
+      <div class="counter-card alt-1">
+        <svg class="donut" viewBox="0 0 36 36" aria-hidden="true">
+          <circle class="bg" cx="18" cy="18" r="15.915"></circle>
+          <circle class="ring" cx="18" cy="18" r="15.915" stroke="#FFCC66"></circle>
+          <text x="18" y="18" text-anchor="middle">{{ contadores.en_uso|default:0 }}</text>
+        </svg>
+        <p class="counter-title">En uso</p>
+      </div>
+
+      <div class="counter-card alt-2">
+        <svg class="donut" viewBox="0 0 36 36" aria-hidden="true">
+          <circle class="bg" cx="18" cy="18" r="15.915"></circle>
+          <circle class="ring" cx="18" cy="18" r="15.915" stroke="#FF6B6B"></circle>
+          <text x="18" y="18" text-anchor="middle">{{ contadores.danados|default:0 }}</text>
+        </svg>
+        <p class="counter-title">Dañados</p>
+      </div>
+    </div>
+
+    <!-- Tabla -->
+    <section class="my-2">
+      <div class="table-wrap">
+        <table id="tabla-stock" class="table-morph">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Cantidad total</th>
+              <th>Disponibles</th>
+              <th>En uso</th>
+              <th>Dañados</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-stock">
+            {% for s in stock_data %}
+            <tr>
+              <td>{{ s.tipo }}</td>
+              <td>{{ s.total }}</td>
+              <td>{{ s.disponibles }}</td>
+              <td>{{ s.en_uso }}</td>
+              <td>{{ s.danados }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">Sin datos de stock.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Form -->
+    <div class="form-stock">
+      <div class="mb-2">
+        <label class="form-label mb-1">Ingreso/Egreso</label>
+        <select id="fld-operacion" class="form-select">
+          <option value="IN">Ingreso</option>
+          <option value="OUT">Egreso</option>
+        </select>
+      </div>
+      <div class="mb-2">
+        <label class="form-label mb-1">Tipo</label>
+        <select id="fld-tipo" class="form-select">
+          {% for t in tipos %}
+            <option value="{{ t.id }}" data-name="{{ t.label }}">{{ t.label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label mb-1">Cantidad</label>
+        <input id="fld-cantidad" type="number" min="1" class="form-control" placeholder="0" inputmode="numeric">
+      </div>
+      <button id="btn-agregar" class="btn-morph w-100">+ Agregar</button>
+    </div>
+
+    <!-- Volver -->
+    <div class="footer-actions">
+      <a href="/movimientos/" class="btn-morph btn">Volver</a>
+    </div>
+  </main>
+</div>
+
+<!-- Modal confirmación -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmar operación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body"><p id="confirm-text" class="mb-0"></p></div>
+      <div class="modal-footer">
+        <button id="btn-confirmar" class="btn btn-primary">Confirmar</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index:1080">
+  <div id="toast" class="toast align-items-center text-bg-dark border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div id="toast-body" class="toast-body">Mensaje</div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Cerrar"></button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+  function getCookie(name){
+    let v=null;if(document.cookie&&document.cookie!==''){
+      const c=document.cookie.split(';');
+      for(let i=0;i<c.length;i++){const ck=c[i].trim();
+        if(ck.substring(0,name.length+1)===(name+'=')){v=decodeURIComponent(ck.substring(name.length+1));break;}
+      }
+    } return v;
+  }
+  const csrftoken = getCookie('csrftoken');
+
+  // POST por nombre de URL (namespace movimientos)
+  const POST_URL = "{% url 'movimientos:actualizar_stock' %}";
+
+  function refreshUI(stock, counters){
+    const tbody = document.getElementById('tbody-stock');
+    tbody.innerHTML = '';
+    if (!stock || !stock.length){
+      tbody.innerHTML = '<tr><td colspan="5">Sin datos de stock.</td></tr>';
+    } else {
+      stock.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${s.tipo}</td>
+          <td>${s.total}</td>
+          <td>${s.disponibles}</td>
+          <td>${s.en_uso}</td>
+          <td>${s.danados}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+    // actualizar números dentro de los donuts
+    const t = document.querySelectorAll('.donut text');
+    if(t.length>=3){
+      t[0].textContent = (counters && counters.disponibles) || 0;
+      t[1].textContent = (counters && counters.en_uso) || 0;
+      t[2].textContent = (counters && counters.danados) || 0;
+    }
+  }
+
+  const btnAgregar = document.getElementById('btn-agregar');
+  const modalEl = document.getElementById('confirmModal');
+  const confirmText = document.getElementById('confirm-text');
+  const btnConfirmar = document.getElementById('btn-confirmar');
+  const toastEl = document.getElementById('toast');
+  const toastBody = document.getElementById('toast-body');
+  const bsModal = new bootstrap.Modal(modalEl);
+  const bsToast = new bootstrap.Toast(toastEl);
+
+  btnAgregar.addEventListener('click', function(){
+    const op = document.getElementById('fld-operacion').value;
+    const sel = document.getElementById('fld-tipo');
+    const tipoNombre = sel.options[sel.selectedIndex]?.dataset?.name || sel.options[sel.selectedIndex]?.textContent || '—';
+    const tipoId = sel.value;
+    const cantidad = parseInt(document.getElementById('fld-cantidad').value || '0');
+
+    if(!cantidad || cantidad<=0){ toastBody.textContent = "Ingresá una cantidad válida."; bsToast.show(); return; }
+    if(!tipoId){ toastBody.textContent = "Seleccioná un tipo válido."; bsToast.show(); return; }
+
+    confirmText.textContent = `¿Confirmás ${op==='IN'?'INGRESAR':'EGRESAR'} ${cantidad} pallet(s) del tipo “${tipoNombre}”?`;
+    bsModal.show();
+
+    btnConfirmar.onclick = async function(){
+      btnConfirmar.disabled = true;
+      try{
+        const form = new FormData();
+        form.append('operacion', op);
+        form.append('tipo_pallet_id', tipoId);
+        form.append('cantidad', cantidad);
+
+        const resp = await fetch(POST_URL, { method:'POST', headers:{'X-CSRFToken': csrftoken}, body: form });
+
+        // Manejo robusto de respuesta para ver mensajes del backend
+        let data = null, text = '';
+        try { data = await resp.clone().json(); } catch { text = await resp.text(); }
+
+        if (!resp.ok || !data?.ok) {
+          const msg = (data && data.error) ? data.error : (text || `HTTP ${resp.status}`);
+          throw new Error(msg);
+        }
+
+        refreshUI(data.stock, data.contadores);
+        toastBody.textContent = "Operación realizada con éxito."; bsToast.show();
+      }catch(err){
+        toastBody.textContent = "Error: " + (err?.message || err); bsToast.show();
+      }finally{
+        btnConfirmar.disabled = false; bsModal.hide();
+      }
+    };
+  });
+})();
+</script>
+</body>
+</html>
