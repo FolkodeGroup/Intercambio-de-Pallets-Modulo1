@@ -4,49 +4,50 @@
 
 {% block content %}
 
-<div>
+<div class="container mt-4">
    
     <main>
 
-        <h2>Gestión de empleados</h2>
-        <nav>
-            <form>
-                <label>
-                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-                    <input 
-                    
+        <h2 class="mb-4">Gestión de empleados</h2>
+        <nav class="d-flex justify-content-between align-items-center mb-4">
+            <form class="w-auto">
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                    </span>
+                    <input
+                        class="form-control text-dark fw-bold"
                         type="search"
                         placeholder="Buscar" 
-                        class="form-control"
                         >
-                </label>
+                </div>
             </form>
-            <button href="" class="btn">+ Nuevo empleado</button>
+            <a href="" class="btn btn-primary">+ Nuevo empleado</a>
         </nav>
 
-        <table class="table table-borderless">
-            <thead>
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
                 <tr>
-                    <th>Apellido</th>
-                    <th>Nombre</th>
-                    <th>DNI</th>
-                    <th>Telefono</th>
+                    <th class="text-end text-dark">Apellido</th>
+                    <th class="text-end text-dark">Nombre</th>
+                    <th class="text-end text-dark">DNI</th>
+                    <th class="text-end text-dark">Telefono</th>
                     <th></th>
                 </tr>
 
             </thead>
             <tbody>
-                <td>Ovejero</td>
-                <td>Agustin</td>
-                <td>45000000</td>
-                <td>116666666</td>
-                <td>
+                <td class="text-end">Ovejero</td>
+                <td class="text-end">Agustin</td>
+                <td class="text-end">45000000</td>
+                <td class="text-end">116666666</td>
+                <td class="text-end">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-baseline-density-small"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 3h16" /><path d="M4 9h16" /><path d="M4 15h16" /><path d="M4 21h16" /></svg>
                 </td>
             </tbody>
         </table>
-        <div>
-            <button href="" class="btn">Ver mas</button>
+        <div class="text-center mt-4">
+            <button href="" class="btn btn-outline-primary">Ver mas</button>
         </div>
         
     </main>
