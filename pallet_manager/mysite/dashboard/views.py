@@ -51,6 +51,8 @@ def home(request):
     es_admin = request.user.is_superuser
 
     context = {
+        'header_title': 'Dashboard', # Título para el encabezado principal
+        'title': 'Dashboard', # Título para la página (y como fallback)
         'es_admin': es_admin,
         'header': datos_header,
         'balance_stock': balance_stock,
