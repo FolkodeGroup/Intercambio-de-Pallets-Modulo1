@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.shortcuts import render, redirect
 from django.forms import modelformset_factory
 from .forms import MovimientoForm, LineaMovimientoForm
-from .models import LineaMovimiento, Movimiento
+from .models import Movimiento, LineaMovimiento
 
 
 def registrar_movimiento(request):
@@ -26,20 +26,25 @@ def registrar_movimiento(request):
                     linea.movimiento = movimiento
                     linea.save()
 
-            return redirect("movimientos")  # tenés que crear esta vista
+            # Corregido: Usar el namespace 'movimientos' para la URL
+            return redirect("movimientos:movimientos")
 
     else:
         movimiento_form = MovimientoForm()
         formset = LineaFormSet(queryset=LineaMovimiento.objects.none())
 
-    return render(request, "movimientos/registrar_movimiento.html", {
+    # Añadimos 'title' al contexto para que el header lo muestre
+    context = {
         "movimiento_form": movimiento_form,
         "formset": formset,
-    })
+        "title": "Registrar Movimiento"
+    }
+    return render(request, "movimientos/registrar_movimiento.html", context)
     
 def movimientos(request):
-    movimientos = Movimiento.objects.all()
-    return render(request, "movimientos/movimientos.html", {"movimientos": movimientos})
+    lista_movimientos = Movimiento.objects.all()
+    context = {'movimientos': lista_movimientos, 'title': 'Movimientos'}
+    return render(request, 'movimientos/movimientos.html', context)
 #Laura
  # movimientos/views.py
 from django.contrib.auth.decorators import login_required
