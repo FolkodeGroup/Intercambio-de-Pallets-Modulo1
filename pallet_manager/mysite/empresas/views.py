@@ -39,7 +39,18 @@ def lista_empresas(request):
 
     context = {
         'title': 'Gestión de Empresas',
+        'header_title': 'Empresas', # Título para el encabezado principal
         'empresas': empresas_con_totales,
     }
 
     return render(request, 'empresas/lista_empresas.html', context)
+
+def crear_empresa(request):
+    """
+    Muestra la página con el formulario para crear una nueva empresa.
+    """
+    context = {
+        'title': 'Nueva Empresa',
+        'header_title': 'Empresas', # Mantenemos el título de la sección
+    }
+    return render(request, 'empresas/crear_empresa.html', context)

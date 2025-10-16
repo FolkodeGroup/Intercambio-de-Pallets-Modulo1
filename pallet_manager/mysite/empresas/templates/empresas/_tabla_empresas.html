@@ -1,11 +1,9 @@
 {% load humanize %}
 
 <div class="table-responsive">
-    {# Aplicamos el padding directamente a la tabla para un control total #}
     <table class="table table-sm table-borderless table-striped text-white mb-0 pm-table">
-        <thead class="pm-table-header"> {# Añadimos la clase de la cabecera del dashboard #}
+        <thead class="pm-table-header">
             <tr>
-                {# Añadimos padding a las celdas de la cabecera #}
                 <th scope="col" class="fw-bold px-4">Razón Social</th>
                 <th scope="col" class="fw-bold">CUIT</th>
                 <th scope="col" class="fw-bold">Ubicación</th>
@@ -15,26 +13,14 @@
             </tr>
         </thead>
         <tbody>
-            {% for empresa in empresas %} {# Itera sobre los datos de prueba de tu vista #}
-            <tr> {# Eliminamos la lógica manual de filas alternadas, Bootstrap se encarga #}
+            {% for empresa in empresas %} 
+            <tr> 
 
-                {# Columna Razón Social #}
-                {# Añadimos padding a las celdas del cuerpo #}
-                <td class="fw-bold px-4">{{ empresa.razon_social }}</td>
-                
-                {# Columna CUIT #}
+                <td class="fw-bold px-4">{{ empresa.razon_social }}</td>   
                 <td>{{ empresa.cuit }}</td>
-                
-                {# Columna Ubicación #}
                 <td>{{ empresa.direccion|default:"N/A" }}</td>
-                
-                {# Columna Total In (Alineación derecha) #}
                 <td class="text-end">{{ empresa.total_in|floatformat:0|intcomma }}</td>
-                
-                {# Columna Total Out (Alineación derecha) #}
                 <td class="text-end">{{ empresa.total_out|floatformat:0|intcomma }}</td>
-                
-                {# Columna Balance (Alineación derecha y color condicional) #}
                 <td class="text-end fw-bold">
                     {% if empresa.balance < 0 %}
                         <span class="text-danger">{{ empresa.balance|floatformat:0|intcomma }}</span>
@@ -45,14 +31,12 @@
                     {% endif %}
                 </td>
                 
-                {# Columna Opciones #}
                 <td class="text-center px-4">
                     <div class="dropdown">
                         <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-three-dots-vertical text-white-50"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-                            {# Los enlaces apuntan a URLs que crearemos más adelante #}
                             <li>
                                 <a class="dropdown-item" href="#">Modificar</a>
                             </li>

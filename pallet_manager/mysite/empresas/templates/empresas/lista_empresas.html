@@ -16,11 +16,11 @@
             
             <div class="d-flex justify-content-between mb-3">
                 <div class="input-group" style="max-width: 300px;">
-                    <span class="input-group-text pm-search-icon"><i class="bi bi-search"></i></span> 
-                    <input type="text" class="form-control pm-search-input" placeholder="Buscar">
+                    <span class="input-group-text pm-search-icon text-dark"><i class="bi bi-search"></i></span> 
+                    <input type="text" class="form-control pm-search-input text-dark" placeholder="Buscar">
                 </div>
                 
-                <a href="#" class="btn pm-btn-primary fw-bold text-nowrap">
+                <a href="{% url 'empresas:crear_empresa' %}" class="btn pm-btn-primary fw-bold text-nowrap">
                     + Nueva empresa
                 </a>
             </div>
@@ -29,7 +29,6 @@
                 
                 <h2 class="h6 fw-bold text-white text-center mb-3 pt-3">Balance por empresa</h2>
                 
-                {# Incluimos la tabla (que ya tiene su propio padding interno correcto) #}
                 {% include 'empresas/_tabla_empresas.html' %} 
                 
                 <div class="text-center mt-3 pb-3">
