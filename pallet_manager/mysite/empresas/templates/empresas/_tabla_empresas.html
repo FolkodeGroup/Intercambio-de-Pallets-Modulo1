@@ -1,0 +1,73 @@
+{% load humanize %}
+
+<div class="table-responsive">
+    {# Aplicamos el padding directamente a la tabla para un control total #}
+    <table class="table table-sm table-borderless table-striped text-white mb-0 pm-table">
+        <thead class="pm-table-header"> {# Añadimos la clase de la cabecera del dashboard #}
+            <tr>
+                {# Añadimos padding a las celdas de la cabecera #}
+                <th scope="col" class="fw-bold px-4">Razón Social</th>
+                <th scope="col" class="fw-bold">CUIT</th>
+                <th scope="col" class="fw-bold">Ubicación</th>
+                <th scope="col" class="text-end fw-bold">Total In</th>
+                <th scope="col" class="text-end fw-bold">Total Out</th>
+                <th scope="col" class="text-end fw-bold px-4">Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for empresa in empresas %} {# Itera sobre los datos de prueba de tu vista #}
+            <tr> {# Eliminamos la lógica manual de filas alternadas, Bootstrap se encarga #}
+
+                {# Columna Razón Social #}
+                {# Añadimos padding a las celdas del cuerpo #}
+                <td class="fw-bold px-4">{{ empresa.razon_social }}</td>
+                
+                {# Columna CUIT #}
+                <td>{{ empresa.cuit }}</td>
+                
+                {# Columna Ubicación #}
+                <td>{{ empresa.direccion|default:"N/A" }}</td>
+                
+                {# Columna Total In (Alineación derecha) #}
+                <td class="text-end">{{ empresa.total_in|floatformat:0|intcomma }}</td>
+                
+                {# Columna Total Out (Alineación derecha) #}
+                <td class="text-end">{{ empresa.total_out|floatformat:0|intcomma }}</td>
+                
+                {# Columna Balance (Alineación derecha y color condicional) #}
+                <td class="text-end fw-bold">
+                    {% if empresa.balance < 0 %}
+                        <span class="text-danger">{{ empresa.balance|floatformat:0|intcomma }}</span>
+                    {% elif empresa.balance > 0 %}
+                        <span class="text-success">+{{ empresa.balance|floatformat:0|intcomma }}</span>
+                    {% else %}
+                        <span class="text-white-50">0</span>
+                    {% endif %}
+                </td>
+                
+                {# Columna Opciones #}
+                <td class="text-center px-4">
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical text-white-50"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                            {# Los enlaces apuntan a URLs que crearemos más adelante #}
+                            <li>
+                                <a class="dropdown-item" href="#">Modificar</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="#">Eliminar</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center text-white-50 py-3">No hay empresas registradas.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

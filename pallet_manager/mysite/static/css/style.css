@@ -99,7 +99,6 @@ body{
     margin: 0 !important; 
 }
 
-/* 3. Círculos de Estado (Componente reutilizable) */
 .pm-status-circle {
     height: 90px;
     width: 90px;
@@ -131,9 +130,9 @@ body{
 }
 
 .pm-quick-access-card {
-    background-color: #002D33 !important; /* Tono más oscuro para contrastar con el contenedor */
+    background-color: #002D33 !important; 
     border-radius: 10px !important;
-    border: 1px solid #0d2e33 !important; /* Borde sutil para definir el botón */
+    border: 1px solid #0d2e33 !important; 
     transition: background-color 0.2s; 
     height: 100%; 
 }
@@ -149,7 +148,7 @@ body{
 .pm-quick-access-card p, 
 .pm-quick-access-card i, 
 .pm-quick-access-card svg { 
-    color: #F3F4F6 !important; /* Color de texto estándar del proyecto (gris claro) */
+    color: #F3F4F6 !important;
     font-size: 3rem !important; 
     transition: color 0.2s; 
     line-height: 1; 
