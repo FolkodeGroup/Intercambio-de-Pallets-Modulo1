@@ -5,6 +5,8 @@ app_name = 'movimientos'
 
 urlpatterns = [
     path('', views.movimientos, name='movimientos'),
+    path('exportar_csv/', views.exportar_csv, name='exportar_csv'),
+    path('exportar_pdf/', views.exportar_pdf, name='exportar_pdf'),
     path('registrar/', views.registrar_movimiento, name='registrar_movimiento'),
     path('gestion-stock/', views.gestion_stock, name='gestion_stock'),
     path('gestion-stock/actualizar/', views.actualizar_stock, name='actualizar_stock'),

@@ -6,22 +6,51 @@ document.addEventListener("DOMContentLoaded", () => {
     const menuTipo = document.getElementById("menu-tipo");
 
     const tabla = document.getElementById("tabla-movimientos");
+    const botonVerMas = document.getElementById("btn-more");
 
-    // 🔹 Mostrar / ocultar menú de ordenar
+    const LIMITE_INICIAL = 8;
+    const INCREMENTO = 10;
+    let mostradas = LIMITE_INICIAL;
+    let filtroActivo = "todos"; // 🔸 Filtro actual
+
+    toggleMenu(btnOrdenar, menuOrdenar, [menuTipo]);
+    toggleMenu(btnTipo, menuTipo, [menuOrdenar]);
+
+    // =========================================================
+    // 🔸 FUNCIONES AUXILIARES
+    // =========================================================
+    function actualizarTabla() {
+        const filas = Array.from(tabla.querySelectorAll("tbody tr"));
+        const filasVisibles = filas.filter(f => f.style.display !== "none");
+
+        filasVisibles.forEach((fila, i) => {
+            fila.style.display = i < mostradas ? "" : "none";
+        });
+
+        // 🔹 Si ya se están mostrando todas las filas visibles, ocultar el botón
+        botonVerMas.style.display = mostradas >= filasVisibles.length ? "none" : "";
+    }
+
+    function resetMostrarMas() {
+        mostradas = LIMITE_INICIAL;
+        actualizarTabla();
+    }
+
+    // =========================================================
+    // 🔹 MENÚS (ordenar / filtrar)
+    // =========================================================
     btnOrdenar.addEventListener("click", (e) => {
         e.stopPropagation();
         menuOrdenar.style.display = menuOrdenar.style.display === "none" ? "flex" : "none";
-        menuTipo.style.display = "none"; // cerrar el otro menú si está abierto
+        menuTipo.style.display = "none";
     });
 
-    // 🔹 Mostrar / ocultar menú de tipo
     btnTipo.addEventListener("click", (e) => {
         e.stopPropagation();
         menuTipo.style.display = menuTipo.style.display === "none" ? "flex" : "none";
-        menuOrdenar.style.display = "none"; // cerrar el otro menú
+        menuOrdenar.style.display = "none";
     });
 
-    // 🔹 Cerrar menús al hacer clic fuera
     document.addEventListener("click", (e) => {
         if (!menuOrdenar.contains(e.target) && e.target !== btnOrdenar) {
             menuOrdenar.style.display = "none";
@@ -31,36 +60,69 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // 🔹 Ordenar al hacer clic en un span
+    // =========================================================
+    // 🔹 ORDENAR
+    // =========================================================
     menuOrdenar.querySelectorAll("span").forEach((option) => {
         option.addEventListener("click", () => {
             const colIndex = parseInt(option.dataset.col);
             sortTable(tabla, colIndex);
             menuOrdenar.style.display = "none";
 
-            // Quitar clase activa de todos los spans
+            // Toggle visual de selección
             menuOrdenar.querySelectorAll("span").forEach(s => s.classList.remove("activo"));
-            // Agregar clase al filtro actual
-            option.classList.add("activo");
+            // Si el botón ya está activo, lo desactiva
+            if (option.classList.contains('activo')) {
+                option.classList.remove('activo');
+                quitarFiltro(); // acá deshacés el filtro aplicado
+            } else {
+                // Si no está activo, lo activa
+                option.classList.add('activo');
+                aplicarFiltro(); // acá aplicás el filtro
+            }
         });
     });
 
-    // 🔹 Filtrar por tipo (Ingreso / Egreso)
+    // =========================================================
+    // 🔹 FILTRAR
+    // =========================================================
     menuTipo.querySelectorAll("span").forEach((option) => {
         option.addEventListener("click", () => {
             const tipo = option.dataset.tipo;
-            filtrarPorTipo(tabla, tipo);
-            menuTipo.style.display = "none";
 
-            // Quitar clase activa de todos los spans
-            menuTipo.querySelectorAll("span").forEach(s => s.classList.remove("activo"));
-            // Marcar el filtro actual
-            option.classList.add("activo");
+            // 🔸 Si se presiona el mismo filtro otra vez, se desactiva
+            if (filtroActivo === tipo) {
+                filtroActivo = "todos";
+                menuTipo.querySelectorAll("span").forEach(s => s.classList.remove("activo"));
+            } else {
+                filtroActivo = tipo;
+                menuTipo.querySelectorAll("span").forEach(s => s.classList.remove("activo"));
+                option.classList.add("activo");
+            }
+
+            filtrarPorTipo(tabla, filtroActivo);
+            resetMostrarMas();
+            menuTipo.style.display = "none";
         });
     });
+
+    // =========================================================
+    // 🔹 BOTÓN "VER MÁS"
+    // =========================================================
+    botonVerMas.addEventListener("click", () => {
+        mostradas += INCREMENTO;
+        actualizarTabla();
+    });
+
+    // Inicialización
+    filtrarPorTipo(tabla, filtroActivo);
+    actualizarTabla();
 });
 
-// 🔸 Función para ordenar tabla
+
+// =========================================================
+// 🔸 ORDENAR TABLA
+// =========================================================
 function sortTable(table, colIndex) {
     const tbody = table.querySelector("tbody");
     const rows = Array.from(tbody.querySelectorAll("tr"));
@@ -84,49 +146,16 @@ function sortTable(table, colIndex) {
         return isAsc ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
     });
 
-    rows.forEach((r) => tbody.appendChild(r));
+    rows.forEach(r => tbody.appendChild(r));
 }
 
-// 🔸 Función para filtrar por tipo (Ingreso/Egreso)
+// =========================================================
+// 🔸 FILTRAR TABLA
+// =========================================================
 function filtrarPorTipo(table, tipo) {
     const filas = table.querySelectorAll("tbody tr");
     filas.forEach(fila => {
         const tipoCelda = fila.children[2].textContent.trim().toLowerCase();
-        if (tipo === "todos" || tipoCelda === tipo) {
-            fila.style.display = "";
-        } else {
-            fila.style.display = "none";
-        }
+        fila.style.display = (tipo === "todos" || tipoCelda === tipo) ? "" : "none";
     });
 }
-
-// 🔸 Mostrar más filas
-document.addEventListener("DOMContentLoaded", function () {
-    const filas = Array.from(document.querySelectorAll("#tabla-movimientos tbody tr"));
-    const boton = document.getElementById("btn-more");
-
-    const LIMITE_INICIAL = 8;
-    const INCREMENTO = 10;
-    let mostradas = LIMITE_INICIAL;
-
-    function actualizarTabla() {
-        filas.forEach((fila, i) => {
-            fila.style.display = i < mostradas ? "" : "none";
-        });
-
-        // 🔹 Mostrar u ocultar el botón según si hay más filas disponibles
-        if (mostradas >= filas.length) {
-            boton.style.display = "none";
-        } else {
-            boton.style.display = ""; // vuelve a mostrarse si hay más filas
-        }
-    }
-
-    boton.addEventListener("click", () => {
-        mostradas += INCREMENTO;
-        actualizarTabla();
-    });
-
-    actualizarTabla();
-});
-
