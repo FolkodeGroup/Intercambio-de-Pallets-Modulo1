@@ -1,15 +1,8 @@
-body{
-    min-height: 100%;
-}
-.container-fluid{
-    height: 91vh;
-    padding-left: 270px;
-    margin: 0 !important;
-}body{
+body {
     min-height: 100%;
 }
 
-.container-fluid{
+.container-fluid {
     height: 91vh;
     padding-left: 270px;
     margin: 0 !important;
@@ -75,4 +68,123 @@ body{
 .sidebar-footer button:hover svg {
     fill: #002D33;
     color: #002D33;
+}
+
+
+.pm-card {
+    background-color: #0d2e33 !important; 
+    border: none !important; 
+    border-radius: 12px !important;
+    color: #F3F4F6 !important; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important;
+}
+
+.pm-card-header {
+    background-color: #002D33 !important; 
+    color: #0BC0A2 !important;
+}
+
+.pm-stock-container {
+    background-color: #F3F4F6 !important;
+    border-radius: 0 0 12px 12px !important; 
+    padding: 1.5rem !important; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 0 !important; 
+}
+
+.pm-status-circle {
+    height: 90px;
+    width: 90px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-width: 2px;
+    border-style: solid;
+}
+.pm-status-circle--disponible {
+    background-color: #E8F5E9;
+    border-color: #81C784;
+}
+.pm-status-circle--en-uso {
+    background-color: #FFF3E0;
+    border-color: #FFCC80;
+}
+.pm-status-circle--dañado {
+    background-color: #FFEBEE;
+    border-color: #EF9A9A;
+}
+
+.pm-quick-access-bar {
+    background-color: #0d2e33 !important; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5) !important; 
+    border-radius: 12px !important;
+}
+
+.pm-quick-access-card {
+    background-color: #002D33 !important; 
+    border-radius: 10px !important;
+    border: 1px solid #0d2e33 !important; 
+    transition: background-color 0.2s; 
+    height: 100%; 
+}
+
+.pm-quick-access-card .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 1rem !important;
+}
+
+.pm-quick-access-card p, 
+.pm-quick-access-card i, 
+.pm-quick-access-card svg { 
+    color: #F3F4F6 !important;
+    font-size: 3rem !important; 
+    transition: color 0.2s; 
+    line-height: 1; 
+}
+
+.pm-quick-access-card p {
+    font-size: 1rem !important; 
+    font-weight: 600 !important;
+    margin-top: 0.5rem !important; 
+}
+
+.pm-quick-access-card:hover {
+    background-color: #0BC0A2 !important;
+}
+.pm-quick-access-card:hover p, 
+.pm-quick-access-card:hover i,
+.pm-quick-access-card:hover svg {
+    fill: #002D33;
+    color: #002D33 !important; 
+}
+
+.table {
+    --bs-table-bg: #0d2e33; 
+    --bs-table-color: #F3F4F6; 
+    --bs-table-border-color: #002D33; 
+}
+.pm-table-header {
+    background-color: #002D33 !important; 
+    color: #0BC0A2 !important; 
+    font-weight: 600;
+}
+.pm-table-row:hover {
+    --bs-table-bg: #004F56; 
+    --bs-table-color: #fff;
+}
+
+.pm-btn-view-more {
+    color: #0BC0A2 !important;
+    border: 1px solid #0BC0A2 !important;
+    background-color: transparent !important;
+    border-radius: 8px !important;
+}
+.pm-btn-view-more:hover {
+    color: #002D33 !important;
+    background-color: #0BC0A2 !important;
 }
