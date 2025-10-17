@@ -1,11 +1,12 @@
 from django.shortcuts import render
+#create your view here
 
-# Create your views here.
+#   Pagina principal Movimientos
+#   ⬇⬇⬇⬇⬇ FUNCIONES DE REGISTRAR MOVIMIENTOS Y MOSTRARLOS EN LA LISTA PRINCIPAL ⬇⬇⬇⬇⬇
 from django.shortcuts import render, redirect
 from django.forms import modelformset_factory
 from .forms import MovimientoForm, LineaMovimientoForm
 from .models import Movimiento, LineaMovimiento
-
 
 def registrar_movimiento(request):
     LineaFormSet = modelformset_factory(LineaMovimiento, form=LineaMovimientoForm, extra=1, can_delete=True)
@@ -26,14 +27,12 @@ def registrar_movimiento(request):
                     linea.movimiento = movimiento
                     linea.save()
 
-            # Corregido: Usar el namespace 'movimientos' para la URL
             return redirect("movimientos:movimientos")
 
     else:
         movimiento_form = MovimientoForm()
         formset = LineaFormSet(queryset=LineaMovimiento.objects.none())
 
-    # Añadimos 'title' al contexto para que el header lo muestre
     context = {
         "movimiento_form": movimiento_form,
         "formset": formset,
@@ -45,6 +44,103 @@ def movimientos(request):
     lista_movimientos = Movimiento.objects.all()
     context = {'movimientos': lista_movimientos, 'title': 'Movimientos'}
     return render(request, 'movimientos/movimientos.html', context)
+
+#       ⬇⬇⬇⬇ FUNCIONES DE EXPORTAR COMO CSV Y PDF ⬇⬇⬇⬇
+import csv
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from .models import Movimiento
+
+# --- EXPORTAR CSV ---
+def exportar_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="movimientos.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Empresa', 'Fecha / Hora', 'Motivo', 'Cantidad', 'Tipo', 'Responsable'])
+
+    movimientos = Movimiento.objects.prefetch_related('lineas').all()
+
+    for movimiento in movimientos:
+        for linea in movimiento.lineas.all():
+            writer.writerow([
+                movimiento.empresa,
+                movimiento.fecha_hora,
+                movimiento.tipo,
+                linea.cantidad,
+                linea.tipo_pallet,
+                movimiento.usuario_creacion
+            ])
+
+    return response
+
+# --- EXPORTAR PDF ---
+def exportar_pdf(request):
+    # --- Configurar la respuesta HTTP ---
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="movimientos.pdf"'
+
+    # --- Crear el documento PDF ---
+    doc = SimpleDocTemplate(response, pagesize=landscape(letter))  # Horizontal
+    elements = []
+
+    # --- Título del documento ---
+    styles = getSampleStyleSheet()
+    title = Paragraph("Reporte de Movimientos", styles['Title'])
+    elements.append(title)
+    elements.append(Spacer(1, 20))
+
+    # --- Encabezados de la tabla ---
+    data = [['Empresa', 'Fecha / Hora', 'Motivo', 'Cantidad', 'Tipo', 'Responsable']]
+
+    # --- Obtener los datos ---
+    movimientos = Movimiento.objects.prefetch_related('lineas').all()
+
+    for movimiento in movimientos:
+        for linea in movimiento.lineas.all():
+            data.append([
+                str(movimiento.empresa),
+                movimiento.fecha_hora.strftime("%d/%m/%Y %H:%M"),
+                str(movimiento.tipo),
+                str(linea.cantidad),
+                str(linea.tipo_pallet),
+                str(movimiento.usuario_creacion)
+            ])
+
+    # --- Crear la tabla ---
+    table = Table(data, repeatRows=1)  # repeatRows mantiene el encabezado en cada página
+
+    # --- Estilo de la tabla ---
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#0D7A7F')),  # Encabezado verde azulado
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 11),
+
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 9),
+
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.gray),
+
+        ('BACKGROUND', (0, 1), (-1, -1), colors.whitesmoke),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.whitesmoke, colors.HexColor('#E8F6F7')]),
+    ])
+    table.setStyle(style)
+
+    elements.append(table)
+
+    # --- Generar el PDF ---
+    doc.build(elements)
+    return response
+
+
+#   Pagina movimientos/gestion-stock
 #Laura
  # movimientos/views.py
 from django.contrib.auth.decorators import login_required
@@ -179,7 +275,6 @@ def _snapshot_stock():
     stock = sorted(stock_map.values(), key=lambda x: str(x["tipo"]))
     contadores = {"disponibles": total_disp, "en_uso": total_uso, "danados": total_dmg}
     return stock, contadores
-
 
 # ========== Pantalla ==========
 @login_required
