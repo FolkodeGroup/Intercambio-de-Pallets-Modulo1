@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <main>
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-4">Crear Nuevo Empleado</h2>
+            <a href="{% url 'vista_empleados' %}" class="btn btn-secondary">Volver al listado</a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+
+                    <!-- Renderizado manual de cada campo del formulario -->
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }} {# El widget ya tiene la clase 'form-control' gracias a forms.py #}
+
+                        {% if field.help_text %}
+                        <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+
+                        {% for error in field.errors %}
+                        <div class="alert alert-danger p-2 mt-1">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+
+                    <!-- Mostrar errores que no pertenecen a un campo específico -->
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger p-2">
+                        {% for error in form.non_field_errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="text-end mt-4">
+                        <button type="submit" class="btn btn-primary">Guardar Empleado</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
