@@ -3,6 +3,8 @@ from django.forms import BaseInlineFormSet
 from .models import Movimiento, LineaMovimiento
 from empresas.models import Empresa
 
+from .models import Movimiento
+
 class MovimientoForm(forms.ModelForm):
     class Meta:
         model = Movimiento
@@ -92,3 +94,29 @@ class LineaMovimientoFormSet(BaseInlineFormSet):
         # self.instance es el Movimiento padre
         if self.instance and self.instance.estado_confirmacion == Movimiento.EstadoConfirmacion.CONFIRMADO:
             raise forms.ValidationError("No se pueden modificar líneas de un movimiento confirmado.")
+
+class EgresoMovimientoForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Aseguramos que exista el campo 'empresa' en el form
+        if 'empresa' in self.fields:
+            try:
+                # Cliente = empresa que NO es proveedora
+                self.fields['empresa'].queryset = Empresa.objects.filter(es_proveedor=False)
+                self.fields['empresa'].label = "Cliente"
+            except Exception:
+                # Fallback por si algo raro pasa con el modelo/queryset
+                self.fields['empresa'].queryset = Empresa.objects.all()
+                self.fields['empresa'].label = "Empresa"
+
+        # Fijar tipo OUT y ocultarlo si el modelo Movimiento tiene ese campo
+        if 'tipo' in self.fields:
+            self.fields['tipo'].initial = 'OUT'
+            self.fields['tipo'].widget = forms.HiddenInput()
+
+    class Meta:
+        model = Movimiento
+        # Ajustá si en tu modelo estos nombres cambian
+        exclude = ['usuario_creacion', 'fecha_hora', 'estado_confirmacion']

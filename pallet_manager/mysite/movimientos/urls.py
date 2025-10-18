@@ -12,4 +12,5 @@ urlpatterns = [
     path('gestion-stock/', views.gestion_stock, name='gestion_stock'),
     path('gestion-stock/actualizar/', views.actualizar_stock, name='actualizar_stock'),
     path('stock/', views.gestion_stock, name='stock_alias'),
+    path("registrar-egreso/", views.registrar_egreso, name="registrar_egreso"),
 ]
