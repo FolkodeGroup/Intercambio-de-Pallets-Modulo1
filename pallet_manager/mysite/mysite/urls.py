@@ -8,6 +8,7 @@ urlpatterns = [
     path('', index, name='index'),
     path('movimientos/', include('movimientos.urls', namespace='movimientos')),
     path("polls/", include("polls.urls")),
+    path('empleados/', include('empleados.urls')),
     path('admin/', admin.site.urls),
     path('dashboard/', include('dashboard.urls')),
 
@@ -27,7 +28,7 @@ urlpatterns = [
 
     # Home
 
-    path('empleados/', include('empleados.urls')),
+
 ]
 # --- ALIAS DE COMPATIBILIDAD (no tocan el código de tus compañeros) ---
 # Hace que {% url 'registrar_movimiento' %} funcione, redirigiendo a la ruta namespaced real.
