@@ -1,57 +1,70 @@
-
 {% extends 'base.html' %}
 {% load static %}
 
 {% block content %}
-
 <div class="container mt-4">
-   
     <main>
-
         <h2 class="mb-4">Gestión de empleados</h2>
+        
         <nav class="d-flex justify-content-between align-items-center mb-4">
-            <form class="w-auto">
+            {# --- CAMBIO 1: Formulario de búsqueda funcional --- #}
+            {# Se añade method="GET" para que la búsqueda se envíe por la URL #}
+            <form class="w-auto" method="GET">
                 <div class="input-group">
                     <span class="input-group-text">
-                        <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
                     </span>
+                    {# Se añade name="q" para que la vista pueda leer lo que el usuario busca #}
                     <input
                         class="form-control text-dark fw-bold"
                         type="search"
-                        placeholder="Buscar" 
-                        >
+                        name="q"
+                        placeholder="Buscar por apellido, nombre o DNI" 
+                        value="{{ request.GET.q }}"> {# Mantiene el texto buscado en la caja #}
                 </div>
             </form>
-            <a href="" class="btn btn-primary">+ Nuevo empleado</a>
+
+            {# --- CAMBIO 2: El botón ahora apunta a la URL de creación --- #}
+            <a href="{% url 'crear_empleado' %}" class="btn btn-primary">+ Nuevo empleado</a>
         </nav>
 
         <table class="table table-hover align-middle">
             <thead class="table-light">
                 <tr>
-                    <th class="text-end text-dark">Apellido</th>
-                    <th class="text-end text-dark">Nombre</th>
-                    <th class="text-end text-dark">DNI</th>
-                    <th class="text-end text-dark">Telefono</th>
-                    <th></th>
+                    <th class="text-dark">Apellido</th>
+                    <th class="text-dark">Nombre</th>
+                    <th class="text-dark">DNI</th>
+                    <th class="text-dark">Teléfono</th>
+                    <th class="text-dark">Usuario</th>
+                    <th class="text-end">Acciones</th>
                 </tr>
-
             </thead>
             <tbody>
-                <td class="text-end">Ovejero</td>
-                <td class="text-end">Agustin</td>
-                <td class="text-end">45000000</td>
-                <td class="text-end">116666666</td>
-                <td class="text-end">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-baseline-density-small"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 3h16" /><path d="M4 9h16" /><path d="M4 15h16" /><path d="M4 21h16" /></svg>
-                </td>
+                {# --- CAMBIO 3: Bucle para mostrar los empleados reales --- #}
+                {# Iteramos sobre la lista 'empleados' que pasamos desde la vista #}
+                {% for empleado in empleados %}
+                <tr>
+                    <td>{{ empleado.last_name }}</td>
+                    <td>{{ empleado.first_name }}</td>
+                    <td>{{ empleado.dni }}</td>
+                    <td>{{ empleado.telefono|default:"N/A" }}</td> {# default:"N/A" por si no tiene teléfono #}
+                    <td>{{ empleado.username }}</td>
+                    <td class="text-end">
+                        {# Aquí irían los botones para editar o eliminar #}
+                        <a href="#" class="btn btn-sm btn-outline-secondary">Editar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                {# Esto se muestra si la lista 'empleados' está vacía #}
+                <tr>
+                    <td colspan="6" class="text-center py-4">No se encontraron empleados.</td>
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
-        <div class="text-center mt-4">
-            <button href="" class="btn btn-outline-primary">Ver mas</button>
-        </div>
         
+        {# Aquí podrías agregar la lógica de paginación si la necesitas en el futuro #}
+
     </main>
-    
-   
 </div>
 {% endblock %}
