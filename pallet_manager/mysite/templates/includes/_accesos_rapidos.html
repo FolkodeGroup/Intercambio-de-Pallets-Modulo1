@@ -1,29 +1,32 @@
-<div class="pm-quick-access-bar p-4 mb-5"> 
+<div class="pm-quick-access-bar p-4 mb-5">
     <div class="text-center mb-4">
         <h2 class="h5 text-white fw-bold">Accesos rápidos</h2>
     </div>
     <div class="row text-center justify-content-center">
-        <div class="col-md-4 col-sm-12 px-3"> 
-            <a href="#" class="card pm-quick-access-card text-decoration-none">
+        <div class="col-md-4 col-sm-12 px-3 mb-3">
+            {# Enlace a Empresas #}
+            <a href="{% url 'empresas:lista_empresas' %}" class="card pm-quick-access-card text-decoration-none">
                 <div class="card-body">
-                    <i class="bi bi-buildings"></i> 
-                    <p class="mb-0">Empresas</p>
+                    <i class="bi bi-buildings" style="font-size: 2rem;"></i>
+                    <p class="mb-0 mt-2">Empresas</p>
                 </div>
             </a>
         </div>
-        <div class="col-md-4 col-sm-12 px-3">
-            <a href="#" class="card pm-quick-access-card text-decoration-none">
+        <div class="col-md-4 col-sm-12 px-3 mb-3">
+            {# Enlace a Empleados #}
+            <a href="{% url 'vista_empleados' %}" class="card pm-quick-access-card text-decoration-none">
                 <div class="card-body">
-                    <i class="bi bi-person-badge-fill"></i> 
-                    <p class="mb-0">Empleados</p>
+                    <i class="bi bi-person-badge-fill" style="font-size: 2rem;"></i>
+                    <p class="mb-0 mt-2">Empleados</p>
                 </div>
             </a>
         </div>
-        <div class="col-md-4 col-sm-12 px-3">
-            <a href="#" class="card pm-quick-access-card text-decoration-none">
+        <div class="col-md-4 col-sm-12 px-3 mb-3">
+            {# Enlace a Movimientos #}
+            <a href="{% url 'movimientos:movimientos' %}" class="card pm-quick-access-card text-decoration-none">
                 <div class="card-body">
-                    <i class="bi bi-box-seam-fill"></i> 
-                    <p class="mb-0">Movimientos</p>
+                    <i class="bi bi-box-seam-fill" style="font-size: 2rem;"></i>
+                    <p class="mb-0 mt-2">Movimientos</p>
                 </div>
             </a>
         </div>
