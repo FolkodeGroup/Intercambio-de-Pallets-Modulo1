@@ -2,11 +2,15 @@ from django.contrib.auth.views import LoginView
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from .forms import CustomUserCreationForm
+from django.shortcuts import render
 
 def index(request):
-    
-    from django.shortcuts import render
-    return render(request, 'index.html')
+    # 1. Crea un diccionario llamado 'context'
+    context = {
+        'title': 'Dashboard Principal'  # <-- Aquí defines la variable y su valor
+    }
+    # 2. Pasa el diccionario como tercer argumento a render()
+    return render(request, 'index.html', context)
 
 class RememberMeLoginView(LoginView):
     template_name = "registration/login.html"
