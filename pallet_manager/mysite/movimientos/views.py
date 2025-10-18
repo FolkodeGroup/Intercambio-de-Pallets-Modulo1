@@ -9,6 +9,12 @@ from .forms import IngresoMovimientoForm, LineaMovimientoForm
 from .forms import MovimientoForm, LineaMovimientoForm
 from .models import Movimiento, LineaMovimiento
 
+from django.contrib import messages
+from django.db import transaction
+
+from .models import LineaMovimiento
+from .forms import EgresoMovimientoForm, LineaMovimientoForm 
+
 def ingresar_movimiento(request):
     # Usamos un formset para las líneas de pallets, igual que antes
     LineaFormSet = modelformset_factory(LineaMovimiento, form=LineaMovimientoForm, extra=1, can_delete=True)
@@ -175,7 +181,75 @@ def exportar_pdf(request):
     # --- Generar el PDF ---
     doc.build(elements)
     return response
+#nuevo egreso
+def registrar_egreso(request):
+    """
+    Vista para registrar un egreso de pallets.
+    Mismo diseño y lógica base que Ingresar Movimiento.
+    """
+    LineaFormSet = modelformset_factory(
+        LineaMovimiento,
+        form=LineaMovimientoForm,
+        extra=1,
+        can_delete=True
+    )
 
+    def _context(mov_form, fs):
+        return {
+            "movimiento_form": mov_form,
+            "formset": fs,
+            "titulo": "Nuevo egreso de pallets",
+            "btn_label": "Registrar egreso",
+            # 👇 Estas dos son importantes para el header
+            "header_title": "Ingresar Movimiento de Pallets",
+            "title": "Ingresar Movimiento de Pallets",
+        }
+
+    if request.method == "POST":
+        movimiento_form = EgresoMovimientoForm(request.POST)
+        formset = LineaFormSet(request.POST, queryset=LineaMovimiento.objects.none())
+
+        # Filtramos líneas válidas (cantidad > 0 y tipo pallet seleccionado)
+        lineas_validas = []
+        if formset.is_valid():
+            for f in formset:
+                if f.cleaned_data and not f.cleaned_data.get("DELETE", False):
+                    cantidad = f.cleaned_data.get("cantidad") or 0
+                    tipo = f.cleaned_data.get("tipo_pallet")
+                    if tipo and cantidad > 0:
+                        lineas_validas.append(f)
+
+        if not lineas_validas:
+            messages.error(request, "Debés cargar al menos una línea válida de egreso.")
+            return render(request, "movimientos/registrar_egreso.html", _context(movimiento_form, formset))
+
+        if movimiento_form.is_valid() and formset.is_valid():
+            try:
+                with transaction.atomic():
+                    movimiento = movimiento_form.save(commit=False)
+                    movimiento.usuario_creacion = request.user
+                    movimiento.save()
+
+                    for f in lineas_validas:
+                        linea = f.save(commit=False)
+                        linea.movimiento = movimiento
+                        linea.save()
+
+                messages.success(request, "✅ Egreso registrado correctamente.")
+                return redirect("movimientos")
+
+            except Exception as e:
+                print(e)  # opcional: para debug
+                messages.error(request, "Ocurrió un error inesperado al guardar el egreso.")
+        else:
+            messages.error(request, "Revisá los errores del formulario.")
+
+        return render(request, "movimientos/registrar_egreso.html", _context(movimiento_form, formset))
+
+    # Si es GET
+    movimiento_form = EgresoMovimientoForm()
+    formset = LineaFormSet(queryset=LineaMovimiento.objects.none())
+    return render(request, "movimientos/registrar_egreso.html", _context(movimiento_form, formset))
 
 #   Pagina movimientos/gestion-stock
 #Laura
