@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import BaseInlineFormSet
 from .models import Movimiento, LineaMovimiento
+from empresas.models import Empresa
 
 class MovimientoForm(forms.ModelForm):
     class Meta:
@@ -37,6 +38,21 @@ class MovimientoForm(forms.ModelForm):
             }),
         }
 
+class IngresoMovimientoForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # 1. Filtramos el campo 'empresa' para mostrar solo proveedores
+        self.fields['empresa'].queryset = Empresa.objects.filter(es_proveedor=True)
+        self.fields['empresa'].label = "Proveedor"
+        
+        # 2. Ocultamos el campo 'tipo' y le asignamos el valor 'IN' por defecto
+        self.fields['tipo'].initial = 'IN'
+        self.fields['tipo'].widget = forms.HiddenInput()
+
+    class Meta:
+        model = Movimiento
+        # Excluimos 'usuario_creacion' porque se asigna en la vista
+        exclude = ['usuario_creacion', 'fecha_hora', 'estado_confirmacion']
 
 class LineaMovimientoForm(forms.ModelForm):
     class Meta:

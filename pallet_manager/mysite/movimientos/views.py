@@ -5,8 +5,45 @@ from django.shortcuts import render
 #   ⬇⬇⬇⬇⬇ FUNCIONES DE REGISTRAR MOVIMIENTOS Y MOSTRARLOS EN LA LISTA PRINCIPAL ⬇⬇⬇⬇⬇
 from django.shortcuts import render, redirect
 from django.forms import modelformset_factory
+from .forms import IngresoMovimientoForm, LineaMovimientoForm
 from .forms import MovimientoForm, LineaMovimientoForm
 from .models import Movimiento, LineaMovimiento
+
+def ingresar_movimiento(request):
+    # Usamos un formset para las líneas de pallets, igual que antes
+    LineaFormSet = modelformset_factory(LineaMovimiento, form=LineaMovimientoForm, extra=1, can_delete=True)
+
+    if request.method == "POST":
+        # Usamos nuestro nuevo formulario IngresoMovimientoForm
+        movimiento_form = IngresoMovimientoForm(request.POST)
+        formset = LineaFormSet(request.POST, queryset=LineaMovimiento.objects.none())
+
+        if movimiento_form.is_valid() and formset.is_valid():
+            movimiento = movimiento_form.save(commit=False)
+            movimiento.usuario_creacion = request.user
+            movimiento.save()  # Guardamos el movimiento principal
+
+            # Guardamos las líneas asociadas
+            for form in formset.cleaned_data:
+                if form: # Asegurarse de que el form no esté vacío
+                    linea = form.save(commit=False)
+                    linea.movimiento = movimiento
+                    linea.save()
+            
+            return redirect("movimientos:movimientos") # Redirigimos a la lista de movimientos
+
+    else:
+        # Al cargar la página por primera vez (GET)
+        movimiento_form = IngresoMovimientoForm()
+        formset = LineaFormSet(queryset=LineaMovimiento.objects.none())
+
+    context = {
+        "movimiento_form": movimiento_form,
+        "formset": formset,
+        "title": "Ingresar Movimiento de Pallets" # Un título más específico
+    }
+    # Renderizamos una nueva plantilla
+    return render(request, "movimientos/ingresar_movimiento.html", context)
 
 def registrar_movimiento(request):
     LineaFormSet = modelformset_factory(LineaMovimiento, form=LineaMovimientoForm, extra=1, can_delete=True)
