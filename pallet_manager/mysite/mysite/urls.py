@@ -5,6 +5,7 @@ from users.views import index, RememberMeLoginView, SignUpView
 from django.views.generic.base import RedirectView
 
 urlpatterns = [
+    path('', index, name='index'),
     path('movimientos/', include('movimientos.urls', namespace='movimientos')),
     path("polls/", include("polls.urls")),
     path('admin/', admin.site.urls),
@@ -25,6 +26,7 @@ urlpatterns = [
     path('register/', SignUpView.as_view(), name='register'),
 
     # Home
+
     path('empleados/', include('empleados.urls')),
 ]
 # --- ALIAS DE COMPATIBILIDAD (no tocan el código de tus compañeros) ---
