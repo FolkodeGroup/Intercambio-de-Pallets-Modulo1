@@ -25,12 +25,14 @@
     background: #002D33;
     border-radius: 5px;
     overflow: hidden;
+    position: static;
 }
 .filters{
     display: flex;
     justify-content: space-around;
     background: #002D33;
     padding: 20px 10px;
+    position: static;
 }
 
 .form-select, .btn-export{
@@ -67,19 +69,18 @@
 
 .form-select{
     padding-left: 20px;
-    position: relative;
+    position: static;
 }
 .form-select span{
     text-align: start;
     flex: 1;
 }
-.dropdown-container {
+.form-motivo-container {
     position: relative;
-    display: inline-block;
 }
 
-.dropdown-menu {
-    position: absolute;
+.menu-ordenar {
+    position: absolute !important;
     top: 100%;
     left: 0;
     background-color: #00393d;
@@ -91,6 +92,7 @@
     flex-direction: column;
     width: 150px;
     z-index: 10;
+    
 }
 
 .dropdown-menu span {
@@ -146,13 +148,9 @@
     user-select: none;
 }
 
-.btn-export{
-    gap: 5px;
-}
-
 .btn-export svg{
-    height: 25px !important;
-    width: 25px !important;
+    height: 25px;
+    width: 25px;
     stroke-width: 80;
 }
 

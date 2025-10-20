@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+  <!-- Mismo CSS que el módulo de movimientos para que se vea idéntico -->
+  <link rel="stylesheet" href="{% static 'movimientos/movimientos.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="movimientos-container">
+  {% include 'includes/sidebar.html' %}
+
+  <main class="movimientos-main">
+    <!-- Título igual al de “Ingresar Movimiento” -->
+    <h4 class="movimientos-main-title">Ingresar Movimiento de Pallets</h4>
+
+    <section class="movimientos-main-section">
+      <form id="formEgreso" method="post" style="color:#e3e3e3;">
+        {% csrf_token %}
+
+        <!-- === PANEL 1: Datos del Egreso (misma tarjeta/colores) === -->
+        <fieldset style="border:1px solid #0D7A7F; padding:1.25rem; margin-bottom:1.5rem; border-radius:6px; background-color:#07494D;">
+          <legend style="color:#e3e3e3; font-weight:bold; font-size:1.1rem; margin-bottom:0.75rem;">
+            Datos del Egreso
+          </legend>
+
+          <!-- Mismo layout de 2 columnas -->
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
+            <p>
+              <label>Cliente *</label><br>
+              {{ movimiento_form.empresa }}
+            </p>
+
+            <p>
+              <label>Ubicación de Origen *</label><br>
+              {{ movimiento_form.ubicacion_origen }}
+              <small style="display:block; opacity:.8;">Galpón propio o dirección de la empresa de origen.</small>
+            </p>
+
+            <p>
+              <label>Ubicación de Destino *</label><br>
+              {{ movimiento_form.ubicacion_destino }}
+              <small style="display:block; opacity:.8;">Galpón propio o dirección de la empresa a donde llega el pallet.</small>
+            </p>
+
+            <p>
+              <label>Número de Remito / Documento</label><br>
+              {{ movimiento_form.doc_referencia }}
+            </p>
+          </div>
+
+          <div style="margin-top:1rem;">
+            <label>Observaciones</label><br>
+            {{ movimiento_form.observaciones }}
+          </div>
+
+          <!-- Si existe 'tipo' en el form, lo dejamos oculto (OUT) -->
+          {% if movimiento_form.tipo %}{{ movimiento_form.tipo }}{% endif %}
+        </fieldset>
+
+        <!-- === PANEL 2: Líneas de Egreso === -->
+        <fieldset style="border:1px solid #0D7A7F; padding:1.25rem; margin-bottom:1.5rem; border-radius:6px; background-color:#07494D;">
+          <legend style="color:#e3e3e3; font-weight:bold; font-size:1.1rem; margin-bottom:0.75rem;">
+            Detalle de Pallets
+          </legend>
+
+          {{ formset.management_form }}
+
+          {% for form in formset %}
+            <div class="linea" style="margin-bottom:1rem; padding:0.75rem; background-color:#0D7A7F; border-radius:4px;">
+              {{ form.as_p }}
+            </div>
+          {% endfor %}
+        </fieldset>
+
+        <!-- Botón centrado como en ingreso -->
+        <div style="text-align:center; margin-top:1.5rem;">
+          <button type="submit"
+                  class="btn btn-success"
+                  style="background-color:#002D33; border:none; padding:0.5rem 1.5rem; font-size:1rem; color:white; border-radius:4px;"
+                  onclick="return confirmarEgreso();">
+            Guardar Egreso
+          </button>
+        </div>
+      </form>
+    </section>
+  </main>
+</div>
+
+<script>
+  // Confirmación (opcional) similar a Ingreso
+  function getVal(name) {
+    const el = document.getElementsByName(name)[0];
+    if (!el) return '';
+    if (el.tagName === 'SELECT') {
+      return el.options[el.selectedIndex]?.text || el.value || '';
+    }
+    return el.value || '';
+  }
+  function totalUnidades() {
+    const totalForms = parseInt(getVal('form-TOTAL_FORMS')) || 0;
+    let total = 0;
+    for (let i = 0; i < totalForms; i++) {
+      const del = document.getElementsByName(`form-${i}-DELETE`)[0];
+      if (del && del.checked) continue;
+      const cant = parseInt(document.getElementsByName(`form-${i}-cantidad`)[0]?.value || '0') || 0;
+      total += cant;
+    }
+    return total;
+  }
+  function confirmarEgreso() {
+    const empresa = getVal('empresa') || '(sin cliente)';
+    const total = totalUnidades();
+    return window.confirm(
+      "¿Confirmar el egreso?\n\n" +
+      "Cliente: " + empresa + "\n" +
+      "Unidades totales: " + total + "\n\n" +
+      "Si estás segura/o, presioná Aceptar para guardar."
+    );
+  }
+</script>
+{% endblock %}

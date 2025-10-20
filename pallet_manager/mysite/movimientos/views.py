@@ -1,11 +1,55 @@
 from django.shortcuts import render
+#create your view here
 
-# Create your views here.
+#   Pagina principal Movimientos
+#   ⬇⬇⬇⬇⬇ FUNCIONES DE REGISTRAR MOVIMIENTOS Y MOSTRARLOS EN LA LISTA PRINCIPAL ⬇⬇⬇⬇⬇
 from django.shortcuts import render, redirect
 from django.forms import modelformset_factory
+from .forms import IngresoMovimientoForm, LineaMovimientoForm
 from .forms import MovimientoForm, LineaMovimientoForm
 from .models import Movimiento, LineaMovimiento
 
+from django.contrib import messages
+from django.db import transaction
+
+from .models import LineaMovimiento
+from .forms import EgresoMovimientoForm, LineaMovimientoForm 
+
+def ingresar_movimiento(request):
+    # Usamos un formset para las líneas de pallets, igual que antes
+    LineaFormSet = modelformset_factory(LineaMovimiento, form=LineaMovimientoForm, extra=1, can_delete=True)
+
+    if request.method == "POST":
+        # Usamos nuestro nuevo formulario IngresoMovimientoForm
+        movimiento_form = IngresoMovimientoForm(request.POST)
+        formset = LineaFormSet(request.POST, queryset=LineaMovimiento.objects.none())
+
+        if movimiento_form.is_valid() and formset.is_valid():
+            movimiento = movimiento_form.save(commit=False)
+            movimiento.usuario_creacion = request.user
+            movimiento.save()  # Guardamos el movimiento principal
+
+            # Guardamos las líneas asociadas
+            for form in formset.cleaned_data:
+                if form: # Asegurarse de que el form no esté vacío
+                    linea = form.save(commit=False)
+                    linea.movimiento = movimiento
+                    linea.save()
+            
+            return redirect("movimientos:movimientos") # Redirigimos a la lista de movimientos
+
+    else:
+        # Al cargar la página por primera vez (GET)
+        movimiento_form = IngresoMovimientoForm()
+        formset = LineaFormSet(queryset=LineaMovimiento.objects.none())
+
+    context = {
+        "movimiento_form": movimiento_form,
+        "formset": formset,
+        "title": "Ingresar Movimiento de Pallets" # Un título más específico
+    }
+    # Renderizamos una nueva plantilla
+    return render(request, "movimientos/ingresar_movimiento.html", context)
 
 def registrar_movimiento(request):
     LineaFormSet = modelformset_factory(LineaMovimiento, form=LineaMovimientoForm, extra=1, can_delete=True)
@@ -32,7 +76,6 @@ def registrar_movimiento(request):
         movimiento_form = MovimientoForm()
         formset = LineaFormSet(queryset=LineaMovimiento.objects.none())
 
-    # Añadimos 'title' al contexto para que el header lo muestre
     context = {
         "movimiento_form": movimiento_form,
         "formset": formset,
@@ -44,6 +87,171 @@ def movimientos(request):
     lista_movimientos = Movimiento.objects.all()
     context = {'movimientos': lista_movimientos, 'title': 'Movimientos'}
     return render(request, 'movimientos/movimientos.html', context)
+
+#       ⬇⬇⬇⬇ FUNCIONES DE EXPORTAR COMO CSV Y PDF ⬇⬇⬇⬇
+import csv
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from .models import Movimiento
+
+# --- EXPORTAR CSV ---
+def exportar_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="movimientos.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Empresa', 'Fecha / Hora', 'Motivo', 'Cantidad', 'Tipo', 'Responsable'])
+
+    movimientos = Movimiento.objects.prefetch_related('lineas').all()
+
+    for movimiento in movimientos:
+        for linea in movimiento.lineas.all():
+            writer.writerow([
+                movimiento.empresa,
+                movimiento.fecha_hora,
+                movimiento.tipo,
+                linea.cantidad,
+                linea.tipo_pallet,
+                movimiento.usuario_creacion
+            ])
+
+    return response
+
+# --- EXPORTAR PDF ---
+def exportar_pdf(request):
+    # --- Configurar la respuesta HTTP ---
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="movimientos.pdf"'
+
+    # --- Crear el documento PDF ---
+    doc = SimpleDocTemplate(response, pagesize=landscape(letter))  # Horizontal
+    elements = []
+
+    # --- Título del documento ---
+    styles = getSampleStyleSheet()
+    title = Paragraph("Reporte de Movimientos", styles['Title'])
+    elements.append(title)
+    elements.append(Spacer(1, 20))
+
+    # --- Encabezados de la tabla ---
+    data = [['Empresa', 'Fecha / Hora', 'Motivo', 'Cantidad', 'Tipo', 'Responsable']]
+
+    # --- Obtener los datos ---
+    movimientos = Movimiento.objects.prefetch_related('lineas').all()
+
+    for movimiento in movimientos:
+        for linea in movimiento.lineas.all():
+            data.append([
+                str(movimiento.empresa),
+                movimiento.fecha_hora.strftime("%d/%m/%Y %H:%M"),
+                str(movimiento.tipo),
+                str(linea.cantidad),
+                str(linea.tipo_pallet),
+                str(movimiento.usuario_creacion)
+            ])
+
+    # --- Crear la tabla ---
+    table = Table(data, repeatRows=1)  # repeatRows mantiene el encabezado en cada página
+
+    # --- Estilo de la tabla ---
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#0D7A7F')),  # Encabezado verde azulado
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 11),
+
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 9),
+
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.gray),
+
+        ('BACKGROUND', (0, 1), (-1, -1), colors.whitesmoke),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.whitesmoke, colors.HexColor('#E8F6F7')]),
+    ])
+    table.setStyle(style)
+
+    elements.append(table)
+
+    # --- Generar el PDF ---
+    doc.build(elements)
+    return response
+#nuevo egreso
+def registrar_egreso(request):
+    """
+    Vista para registrar un egreso de pallets.
+    Mismo diseño y lógica base que Ingresar Movimiento.
+    """
+    LineaFormSet = modelformset_factory(
+        LineaMovimiento,
+        form=LineaMovimientoForm,
+        extra=1,
+        can_delete=True
+    )
+
+    def _context(mov_form, fs):
+        return {
+            "movimiento_form": mov_form,
+            "formset": fs,
+            "titulo": "Nuevo egreso de pallets",
+            "btn_label": "Registrar egreso",
+            # 👇 Estas dos son importantes para el header
+            "header_title": "Ingresar Movimiento de Pallets",
+            "title": "Ingresar Movimiento de Pallets",
+        }
+
+    if request.method == "POST":
+        movimiento_form = EgresoMovimientoForm(request.POST)
+        formset = LineaFormSet(request.POST, queryset=LineaMovimiento.objects.none())
+
+        # Filtramos líneas válidas (cantidad > 0 y tipo pallet seleccionado)
+        lineas_validas = []
+        if formset.is_valid():
+            for f in formset:
+                if f.cleaned_data and not f.cleaned_data.get("DELETE", False):
+                    cantidad = f.cleaned_data.get("cantidad") or 0
+                    tipo = f.cleaned_data.get("tipo_pallet")
+                    if tipo and cantidad > 0:
+                        lineas_validas.append(f)
+
+        if not lineas_validas:
+            messages.error(request, "Debés cargar al menos una línea válida de egreso.")
+            return render(request, "movimientos/registrar_egreso.html", _context(movimiento_form, formset))
+
+        if movimiento_form.is_valid() and formset.is_valid():
+            try:
+                with transaction.atomic():
+                    movimiento = movimiento_form.save(commit=False)
+                    movimiento.usuario_creacion = request.user
+                    movimiento.save()
+
+                    for f in lineas_validas:
+                        linea = f.save(commit=False)
+                        linea.movimiento = movimiento
+                        linea.save()
+
+                messages.success(request, "✅ Egreso registrado correctamente.")
+                return redirect("movimientos")
+
+            except Exception as e:
+                print(e)  # opcional: para debug
+                messages.error(request, "Ocurrió un error inesperado al guardar el egreso.")
+        else:
+            messages.error(request, "Revisá los errores del formulario.")
+
+        return render(request, "movimientos/registrar_egreso.html", _context(movimiento_form, formset))
+
+    # Si es GET
+    movimiento_form = EgresoMovimientoForm()
+    formset = LineaFormSet(queryset=LineaMovimiento.objects.none())
+    return render(request, "movimientos/registrar_egreso.html", _context(movimiento_form, formset))
+
+#   Pagina movimientos/gestion-stock
 #Laura
  # movimientos/views.py
 from django.contrib.auth.decorators import login_required
@@ -178,7 +386,6 @@ def _snapshot_stock():
     stock = sorted(stock_map.values(), key=lambda x: str(x["tipo"]))
     contadores = {"disponibles": total_disp, "en_uso": total_uso, "danados": total_dmg}
     return stock, contadores
-
 
 # ========== Pantalla ==========
 @login_required
