@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Empresa
 from django.db.models import Sum, Value, Case, When, F
 from django.db.models.functions import Coalesce
 import random # Importamos random para generar datos de prueba
+from django.contrib import messages
+from django.urls import reverse
 
 # Vista principal para la lista de empresas
 def lista_empresas(request):
@@ -10,47 +12,70 @@ def lista_empresas(request):
     Muestra la página de gestión/listado de empresas, calculando los totales
     de movimientos (IN/OUT) y el balance para cada una.
     """
-    # --- MODO DATOS REALES (Comentado temporalmente) ---
-    # empresas_con_totales = Empresa.objects.annotate(
-    #     total_in=Coalesce(Sum(
-    #         Case(When(movimientos__tipo='IN', then=F('movimientos__lineas__cantidad')), default=Value(0))
-    #     ), Value(0)),
-    #     total_out=Coalesce(Sum(
-    #         Case(When(movimientos__tipo='OUT', then=F('movimientos__lineas__cantidad')), default=Value(0))
-    #     ), Value(0))
-    # ).annotate(
-    #     balance=F('total_in') - F('total_out')
-    # )
-
-    # --- MODO MOCK (Datos de prueba para visualización) ---
-    empresas_con_totales = []
-    for i in range(1, 11): # Generamos 10 empresas de ejemplo
-        total_in = random.randint(50, 500)
-        total_out = random.randint(50, 500)
-        empresas_con_totales.append({
-            'id': i, # Añadimos un ID para los enlaces del menú
-            'razon_social': f'Empresa de Prueba {i}',
-            'cuit': f'30{random.randint(10000000, 99999999)}9',
-            'direccion': f'Calle Falsa {random.randint(100, 2000)}, Ciudad Ejemplo',
-            'total_in': total_in,
-            'total_out': total_out,
-            'balance': total_in - total_out,
-        })
+    # --- MODO DATOS REALES ---
+    # Ahora obtenemos todas las empresas directamente de la base de datos.
+    # Las ordenamos por razón social para mantener un orden consistente.
+    empresas_reales = Empresa.objects.all().order_by('razon_social')
 
     context = {
         'title': 'Gestión de Empresas',
         'header_title': 'Empresas', # Título para el encabezado principal
-        'empresas': empresas_con_totales,
+        'empresas': empresas_reales,
     }
 
     return render(request, 'empresas/lista_empresas.html', context)
 
 def crear_empresa(request):
     """
-    Muestra la página con el formulario para crear una nueva empresa.
+    Gestiona la creación de una nueva empresa.
+    - Muestra el formulario en una petición GET.
+    - Procesa los datos del formulario en una petición POST.
     """
+    if request.method == 'POST':
+        # --- PROCESAR EL FORMULARIO ---
+        razon_social = request.POST.get('razon_social')
+        cuit = request.POST.get('cuit')
+        tipo = request.POST.get('tipo') # 'CLIENTE' o 'PROVEEDOR'
+        telefono = request.POST.get('telefono')
+        email = request.POST.get('email')
+        direccion = request.POST.get('direccion')
+
+        # Validar que los campos obligatorios no estén vacíos
+        if not all([razon_social, cuit, tipo]):
+            messages.error(request, 'Error: Razón Social, CUIT y Tipo son campos obligatorios.')
+            context = {
+                'form_data': request.POST,
+                'header_title': 'Nueva Empresa',
+                'title': 'Crear Empresa',
+            }
+            # Devolvemos los datos ingresados para que el usuario no los pierda
+            return render(request, 'empresas/crear_empresa.html', context)
+
+        try:
+            # Crear la nueva instancia del modelo Empresa
+            Empresa.objects.create(
+                razon_social=razon_social,
+                cuit=cuit,
+                es_proveedor=(tipo == 'PROVEEDOR'), # Convertimos el 'tipo' a un booleano
+                telefono=telefono,
+                email=email,
+                direccion=direccion
+            )
+            messages.success(request, f'¡Empresa "{razon_social}" creada exitosamente!')
+            return redirect('empresas:lista_empresas')
+
+        except Exception as e:
+            messages.error(request, f'Error al crear la empresa: {e}')
+            context = {
+                'form_data': request.POST,
+                'header_title': 'Nueva Empresa',
+                'title': 'Crear Empresa',
+            }
+            return render(request, 'empresas/crear_empresa.html', context)
+
+    # --- MOSTRAR EL FORMULARIO VACÍO (petición GET) ---
     context = {
-        'title': 'Nueva Empresa',
-        'header_title': 'Empresas', # Mantenemos el título de la sección
+        'header_title': 'Nueva Empresa',
+        'title': 'Crear Empresa',
     }
     return render(request, 'empresas/crear_empresa.html', context)

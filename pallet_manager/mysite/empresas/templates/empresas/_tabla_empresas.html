@@ -1,36 +1,27 @@
-{% load humanize %}
-
 <div class="table-responsive">
     <table class="table table-sm table-borderless table-striped text-white mb-0 pm-table">
         <thead class="pm-table-header">
             <tr>
                 <th scope="col" class="fw-bold px-4">Razón Social</th>
                 <th scope="col" class="fw-bold">CUIT</th>
-                <th scope="col" class="fw-bold">Ubicación</th>
-                <th scope="col" class="text-end fw-bold">Total In</th>
-                <th scope="col" class="text-end fw-bold">Total Out</th>
-                <th scope="col" class="text-end fw-bold px-4">Balance</th>
+                <th scope="col" class="fw-bold">Email</th>
+                <th scope="col" class="fw-bold">Tipo</th>
+                <th scope="col" class="text-center fw-bold px-4">Acciones</th>
             </tr>
         </thead>
         <tbody>
             {% for empresa in empresas %} 
             <tr> 
-
                 <td class="fw-bold px-4">{{ empresa.razon_social }}</td>   
                 <td>{{ empresa.cuit }}</td>
-                <td>{{ empresa.direccion|default:"N/A" }}</td>
-                <td class="text-end">{{ empresa.total_in|floatformat:0|intcomma }}</td>
-                <td class="text-end">{{ empresa.total_out|floatformat:0|intcomma }}</td>
-                <td class="text-end fw-bold">
-                    {% if empresa.balance < 0 %}
-                        <span class="text-danger">{{ empresa.balance|floatformat:0|intcomma }}</span>
-                    {% elif empresa.balance > 0 %}
-                        <span class="text-success">+{{ empresa.balance|floatformat:0|intcomma }}</span>
+                <td>{{ empresa.email|default:"N/A" }}</td>
+                <td>
+                    {% if empresa.es_proveedor %}
+                        <span class="badge bg-info text-dark rounded-pill">Proveedor</span>
                     {% else %}
-                        <span class="text-white-50">0</span>
+                        <span class="badge bg-warning text-dark rounded-pill">Cliente</span>
                     {% endif %}
                 </td>
-                
                 <td class="text-center px-4">
                     <div class="dropdown">
                         <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -49,7 +40,7 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="7" class="text-center text-white-50 py-3">No hay empresas registradas.</td>
+                <td colspan="5" class="text-center text-white-50 py-3">No hay empresas registradas.</td>
             </tr>
             {% endfor %}
         </tbody>

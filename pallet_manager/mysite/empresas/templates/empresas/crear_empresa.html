@@ -18,13 +18,9 @@
                     
 
                     <div class="row mb-4">
-                        <div class="col-md-6">
-                            <label for="id_empresa" class="form-label text-dark">Empresa</label>
-                            <input type="text" class="form-control text-dark" id="id_empresa" name="empresa" required>
-                        </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label for="id_razon_social" class="form-label text-dark">Razon social</label>
-                            <input type="text" class="form-control text-dark" id="id_razon_social" name="razon_social" required>
+                            <input type="text" class="form-control text-dark" id="id_razon_social" name="razon_social" value="{{ form_data.razon_social }}" required>
                         </div>
                     </div>
                     
@@ -32,14 +28,14 @@
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <label for="id_cuit" class="form-label text-dark">CUIT</label>
-                            <input type="text" class="form-control text-dark" id="id_cuit" name="cuit" required>
+                            <input type="text" class="form-control text-dark" id="id_cuit" name="cuit" value="{{ form_data.cuit }}" required>
                         </div>
                         <div class="col-md-6">
                             <label for="id_tipo" class="form-label text-dark">Tipo</label>
                             <select class="form-select text-dark" id="id_tipo" name="tipo" required>
-                                <option disabled selected class="text-dark">Cliente / Proveedor</option> 
-                                <option value="CLIENTE" class="text-dark">Cliente</option>
-                                <option value="PROVEEDOR" class="text-dark">Proveedor</option>
+                                <option value="" disabled {% if not form_data.tipo %}selected{% endif %} class="text-dark">Cliente / Proveedor</option> 
+                                <option value="CLIENTE" class="text-dark" {% if form_data.tipo == 'CLIENTE' %}selected{% endif %}>Cliente</option>
+                                <option value="PROVEEDOR" class="text-dark" {% if form_data.tipo == 'PROVEEDOR' %}selected{% endif %}>Proveedor</option>
                             </select>
                         </div>
                     </div>
@@ -48,18 +44,18 @@
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <label for="id_telefono" class="form-label text-dark">Teléfono</label>
-                            <input type="tel" class="form-control text-dark" id="id_telefono" name="telefono">
+                            <input type="tel" class="form-control text-dark" id="id_telefono" name="telefono" value="{{ form_data.telefono }}">
                         </div>
                         <div class="col-md-6">
                             <label for="id_email" class="form-label text-dark">Email</label>
-                            <input type="email" class="form-control text-dark" id="id_email" name="email">
+                            <input type="email" class="form-control text-dark" id="id_email" name="email" value="{{ form_data.email }}">
                         </div>
                     </div>
 
 
                     <div class="mb-4">
                         <label for="id_direccion" class="form-label text-dark">Direccion</label>
-                        <input type="text" class="form-control text-dark" id="id_direccion" name="direccion">
+                        <input type="text" class="form-control text-dark" id="id_direccion" name="direccion" value="{{ form_data.direccion }}">
                     </div>
 
 
