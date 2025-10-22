@@ -54,12 +54,13 @@
                         <a href="#" class="btn btn-sm btn-outline-secondary">Editar</a>
                     </td>
                 </tr>
-                {% empty %}
+                {% endfor %}
+                {% if not empleados %}
                 {# Esto se muestra si la lista 'empleados' está vacía #}
                 <tr>
                     <td colspan="6" class="text-center py-4">No se encontraron empleados.</td>
                 </tr>
-                {% endfor %}
+                {% endif %}
             </tbody>
         </table>
         
