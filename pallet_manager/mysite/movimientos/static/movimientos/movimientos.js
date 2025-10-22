@@ -13,6 +13,29 @@ document.addEventListener("DOMContentLoaded", () => {
     let mostradas = LIMITE_INICIAL;
     let filtroActivo = "todos"; // 🔸 Filtro actual
 
+    // =========================================================
+    // 🔸 TOGGLE MENÚ GENÉRICO
+    // =========================================================
+    function toggleMenu(boton, menu, otrosMenus = []) {
+        menu.style.display = "none";
+
+        boton.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const isVisible = menu.style.display !== "none";
+            menu.style.display = isVisible ? "none" : "flex";
+
+            // Ocultar otros menús pasados como array
+            otrosMenus.forEach(m => m.style.display = "none");
+        });
+
+        // Cerrar menú al hacer click fuera
+        document.addEventListener("click", (e) => {
+            if (!menu.contains(e.target) && e.target !== boton) {
+                menu.style.display = "none";
+            }
+        });
+    }
+
     toggleMenu(btnOrdenar, menuOrdenar, [menuTipo]);
     toggleMenu(btnTipo, menuTipo, [menuOrdenar]);
 
@@ -27,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
             fila.style.display = i < mostradas ? "" : "none";
         });
 
-        // 🔹 Si ya se están mostrando todas las filas visibles, ocultar el botón
         botonVerMas.style.display = mostradas >= filasVisibles.length ? "none" : "";
     }
 
@@ -35,30 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
         mostradas = LIMITE_INICIAL;
         actualizarTabla();
     }
-
-    // =========================================================
-    // 🔹 MENÚS (ordenar / filtrar)
-    // =========================================================
-    btnOrdenar.addEventListener("click", (e) => {
-        e.stopPropagation();
-        menuOrdenar.style.display = menuOrdenar.style.display === "none" ? "flex" : "none";
-        menuTipo.style.display = "none";
-    });
-
-    btnTipo.addEventListener("click", (e) => {
-        e.stopPropagation();
-        menuTipo.style.display = menuTipo.style.display === "none" ? "flex" : "none";
-        menuOrdenar.style.display = "none";
-    });
-
-    document.addEventListener("click", (e) => {
-        if (!menuOrdenar.contains(e.target) && e.target !== btnOrdenar) {
-            menuOrdenar.style.display = "none";
-        }
-        if (!menuTipo.contains(e.target) && e.target !== btnTipo) {
-            menuTipo.style.display = "none";
-        }
-    });
 
     // =========================================================
     // 🔹 ORDENAR
@@ -71,14 +69,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Toggle visual de selección
             menuOrdenar.querySelectorAll("span").forEach(s => s.classList.remove("activo"));
-            // Si el botón ya está activo, lo desactiva
             if (option.classList.contains('activo')) {
                 option.classList.remove('activo');
-                quitarFiltro(); // acá deshacés el filtro aplicado
+                quitarFiltro(); // función externa que deshace filtro aplicado
             } else {
-                // Si no está activo, lo activa
                 option.classList.add('activo');
-                aplicarFiltro(); // acá aplicás el filtro
+                aplicarFiltro(); // función externa que aplica filtro
             }
         });
     });
@@ -90,7 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
         option.addEventListener("click", () => {
             const tipo = option.dataset.tipo;
 
-            // 🔸 Si se presiona el mismo filtro otra vez, se desactiva
             if (filtroActivo === tipo) {
                 filtroActivo = "todos";
                 menuTipo.querySelectorAll("span").forEach(s => s.classList.remove("activo"));
@@ -114,11 +109,15 @@ document.addEventListener("DOMContentLoaded", () => {
         actualizarTabla();
     });
 
-    // Inicialización
-    filtrarPorTipo(tabla, filtroActivo);
-    actualizarTabla();
+    // =========================================================
+    // 🔹 INICIALIZACIÓN
+    // =========================================================
+    const filas = tabla.querySelectorAll("tbody tr");
+    if (filas.length > 0) {
+        filtrarPorTipo(tabla, filtroActivo);
+        actualizarTabla();
+    }
 });
-
 
 // =========================================================
 // 🔸 ORDENAR TABLA
@@ -155,7 +154,12 @@ function sortTable(table, colIndex) {
 function filtrarPorTipo(table, tipo) {
     const filas = table.querySelectorAll("tbody tr");
     filas.forEach(fila => {
-        const tipoCelda = fila.children[2].textContent.trim().toLowerCase();
-        fila.style.display = (tipo === "todos" || tipoCelda === tipo) ? "" : "none";
+        if (fila) {
+            const tipoCelda = fila.children[2].textContent.trim().toLowerCase(); // columna tipo
+            fila.style.display = (tipo === "todos" || tipoCelda === tipo) ? "" : "none";
+        }
+        
     });
 }
+
+

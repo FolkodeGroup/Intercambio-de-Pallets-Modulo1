@@ -2,69 +2,72 @@ from django.shortcuts import render
 #create your view here
 
 #   Pagina principal Movimientos
+#   Función para ver el remito
+def ver_remito(request, movimiento_id):
+    movimiento = Movimiento.objects.get(id=movimiento_id)
+    lineas = movimiento.lineas.all()
+
+    contexto = {
+        "movimiento": {
+            "id": movimiento.id,
+            "fecha_creacion": movimiento.fecha_hora,
+            "usuario_creacion": movimiento.usuario_creacion or request.user,
+            "empresa": movimiento.empresa,
+            "observaciones": movimiento.observaciones,
+            "ubicacion_origen": movimiento.ubicacion_origen,
+            "ubicacion_destino": movimiento.ubicacion_destino,
+            "tipo": movimiento.tipo,  # IN/OUT
+        },
+        "lineas": [
+            {
+                "tipo_pallet": linea.tipo_pallet,
+                "cantidad": linea.cantidad,
+                "movimiento": {
+                    "ubicacion_origen": linea.movimiento.ubicacion_origen,
+                    "ubicacion_destino": linea.movimiento.ubicacion_destino,
+                }
+            }
+            for linea in lineas
+        ],
+        "title": f"Remito de {'ingreso' if movimiento.tipo == 'IN' else 'egreso'}",
+        "header_title": "movimientos"
+    }
+    
+    return render(request, "movimientos/remito.html", contexto)
+
 #   ⬇⬇⬇⬇⬇ FUNCIONES DE REGISTRAR MOVIMIENTOS Y MOSTRARLOS EN LA LISTA PRINCIPAL ⬇⬇⬇⬇⬇
 from django.shortcuts import render, redirect
-from django.forms import modelformset_factory
-from .forms import IngresoMovimientoForm, LineaMovimientoForm
-from .forms import MovimientoForm, LineaMovimientoForm
+from django.forms import modelformset_factory, inlineformset_factory
+from .forms import IngresoMovimientoForm, MovimientoForm, EgresoMovimientoForm, LineaMovimientoForm
 from .models import Movimiento, LineaMovimiento
-
 from django.contrib import messages
 from django.db import transaction
 
-from .models import LineaMovimiento
-from .forms import EgresoMovimientoForm, LineaMovimientoForm 
-
-from django.forms import inlineformset_factory 
-from .forms import IngresoMovimientoForm, LineaMovimientoForm
-from .models import Movimiento, LineaMovimiento
-
 def ingresar_movimiento(request):
-    
-    # 1. Usa inlineformset_factory
-    # Le decimos que LineaMovimiento está conectado a Movimiento
+    # Usar inlineformset_factory para vincular LineaMovimiento a Movimiento
     LineaFormSet = inlineformset_factory(
-        Movimiento,                 # Modelo Padre
-        LineaMovimiento,            # Modelo Hijo
-        form=LineaMovimientoForm,   # El form a usar para cada línea
-        extra=1,                    # Cuántas líneas vacías mostrar
+        Movimiento,
+        LineaMovimiento,
+        form=LineaMovimientoForm,
+        extra=1,
         can_delete=True
     )
 
     if request.method == "POST":
         movimiento_form = IngresoMovimientoForm(request.POST)
+        formset = LineaFormSet(request.POST)
 
-        # 2. VALIDAMOS EL FORMULARIO PADRE PRIMERO
-        if movimiento_form.is_valid():
-            # Creamos el objeto padre en memoria
+        if movimiento_form.is_valid() and formset.is_valid():
             movimiento = movimiento_form.save(commit=False)
             movimiento.usuario_creacion = request.user
-            
-            # 3. CREAMOS EL FORMSET VINCULADO AL PADRE (instance=movimiento)
-            formset = LineaFormSet(request.POST, instance=movimiento)
-
-            # 4. VALIDAMOS EL FORMSET
-            if formset.is_valid():
-                # 5. GUARDAMOS TODO (¡Así de simple!)
-                movimiento.save()  # Guarda el padre
-                formset.save()     # Guarda todos los hijos y asigna la FK automáticamente
-
-                messages.success(request, "✅ Ingreso registrado correctamente.")
-                return redirect("movimientos:movimientos")
-            else:
-                # Si el formset es inválido (ej: líneas sin cantidad)
-                messages.error(request, "Revisá los datos en las líneas de pallets.")
-        else:
-            # Si el form principal es inválido
-            messages.error(request, "Revisá los datos principales del ingreso.")
-            # Necesitamos inicializar un formset vacío para mostrar los errores
-            formset = LineaFormSet(request.POST)
-
+            movimiento.save()
+            formset.instance = movimiento
+            formset.save()
+            messages.success(request, "✅ Movimiento ingresado correctamente.")
+            return redirect("movimientos:movimientos")
     else:
-        # GET (Carga inicial)
         movimiento_form = IngresoMovimientoForm()
-        # 6. Creamos un formset vacío pero vinculado a un padre vacío
-        formset = LineaFormSet(instance=Movimiento()) 
+        formset = LineaFormSet()
 
     context = {
         "movimiento_form": movimiento_form,
@@ -80,18 +83,32 @@ def registrar_movimiento(request):
         movimiento_form = MovimientoForm(request.POST)
         formset = LineaFormSet(request.POST, queryset=LineaMovimiento.objects.none())
 
+        # Verificamos cuál botón fue presionado
+        generar_remito = "btn-remito" in request.POST
+
         if movimiento_form.is_valid() and formset.is_valid():
             movimiento = movimiento_form.save(commit=False)
             movimiento.usuario_creacion = request.user
             movimiento.save()
 
+            lineas = []
             # Guardar cada línea y asociarla al movimiento
             for form in formset:
                 if form.cleaned_data:
                     linea = form.save(commit=False)
                     linea.movimiento = movimiento
                     linea.save()
+                    lineas.append(linea)
 
+            #Si el usuario presiona el botón "generar remito"
+            if generar_remito:
+                contexto = {
+                    "movimiento": movimiento,
+                    "lineas": lineas
+                }
+                return render(request, "movimientos/remito.html")
+            
+            #Si solo lo guardó entonces redirigimos a la lista de movimientos
             return redirect("movimientos:movimientos")
 
     else:
@@ -103,6 +120,7 @@ def registrar_movimiento(request):
         "formset": formset,
         "title": "Registrar Movimiento"
     }
+    
     return render(request, "movimientos/registrar_movimiento.html", context)
     
 def movimientos(request):
@@ -203,6 +221,8 @@ def exportar_pdf(request):
     # --- Generar el PDF ---
     doc.build(elements)
     return response
+
+
 #nuevo egreso
 def registrar_egreso(request):
     """
@@ -230,7 +250,6 @@ def registrar_egreso(request):
     if request.method == "POST":
         movimiento_form = EgresoMovimientoForm(request.POST)
         formset = LineaFormSet(request.POST, queryset=LineaMovimiento.objects.none())
-
         # Filtramos líneas válidas (cantidad > 0 y tipo pallet seleccionado)
         lineas_validas = []
         if formset.is_valid():
@@ -257,9 +276,12 @@ def registrar_egreso(request):
                         linea.movimiento = movimiento
                         linea.save()
 
-                messages.success(request, "✅ Egreso registrado correctamente.")
-                return redirect("movimientos")
+                if "btn-remito" in request.POST:
+                    return redirect("movimientos:ver_remito", movimiento_id=movimiento.id)
 
+                messages.success(request, "✅ Egreso registrado correctamente.")
+                return redirect("movimientos:movimientos")
+            
             except Exception as e:
                 print(e)  # opcional: para debug
                 messages.error(request, "Ocurrió un error inesperado al guardar el egreso.")

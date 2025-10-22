@@ -2,8 +2,9 @@
 {% load static %}
 
 {% block head %}
-  <!-- Mismo CSS que el módulo de movimientos para que se vea idéntico -->
-  <link rel="stylesheet" href="{% static 'movimientos/movimientos.css' %}">
+    <!-- Mismo CSS que el módulo de movimientos para que se vea idéntico -->
+    <link rel="stylesheet" href="{% static 'movimientos/movimientos.css' %}">
+    <script src="{% static 'registrar_egreso/registrar_egreso.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -75,11 +76,18 @@
 
         <!-- Botón centrado como en ingreso -->
         <div style="text-align:center; margin-top:1.5rem;">
-          <button type="submit"
+          <button type="button" id="btn-back" class="btn btn-success" style="background-color: #002D33; border: none; padding: 0.5rem 1.5rem; font-size: 1rem; color: white; border-radius: 4px;">
+            Volver
+          </button>
+          <button id="btn-egreso"
+                  type="submit"
                   class="btn btn-success"
                   style="background-color:#002D33; border:none; padding:0.5rem 1.5rem; font-size:1rem; color:white; border-radius:4px;"
                   onclick="return confirmarEgreso();">
             Guardar Egreso
+          </button>
+          <button type="submit" name="btn-remito" id="btn-remito" class="btn btn-success" style="background-color: #002D33; border: none; padding: 0.5rem 1.5rem; font-size: 1rem; color: white; border-radius: 4px;">
+            Generar Remito
           </button>
         </div>
       </form>
@@ -87,36 +95,4 @@
   </main>
 </div>
 
-<script>
-  // Confirmación (opcional) similar a Ingreso
-  function getVal(name) {
-    const el = document.getElementsByName(name)[0];
-    if (!el) return '';
-    if (el.tagName === 'SELECT') {
-      return el.options[el.selectedIndex]?.text || el.value || '';
-    }
-    return el.value || '';
-  }
-  function totalUnidades() {
-    const totalForms = parseInt(getVal('form-TOTAL_FORMS')) || 0;
-    let total = 0;
-    for (let i = 0; i < totalForms; i++) {
-      const del = document.getElementsByName(`form-${i}-DELETE`)[0];
-      if (del && del.checked) continue;
-      const cant = parseInt(document.getElementsByName(`form-${i}-cantidad`)[0]?.value || '0') || 0;
-      total += cant;
-    }
-    return total;
-  }
-  function confirmarEgreso() {
-    const empresa = getVal('empresa') || '(sin cliente)';
-    const total = totalUnidades();
-    return window.confirm(
-      "¿Confirmar el egreso?\n\n" +
-      "Cliente: " + empresa + "\n" +
-      "Unidades totales: " + total + "\n\n" +
-      "Si estás segura/o, presioná Aceptar para guardar."
-    );
-  }
-</script>
 {% endblock %}
