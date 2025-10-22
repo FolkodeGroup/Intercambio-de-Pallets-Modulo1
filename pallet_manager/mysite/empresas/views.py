@@ -12,15 +12,23 @@ def lista_empresas(request):
     Muestra la página de gestión/listado de empresas, calculando los totales
     de movimientos (IN/OUT) y el balance para cada una.
     """
-    # --- MODO DATOS REALES ---
-    # Ahora obtenemos todas las empresas directamente de la base de datos.
-    # Las ordenamos por razón social para mantener un orden consistente.
-    empresas_reales = Empresa.objects.all().order_by('razon_social')
-
+    # --- MODO DATOS REALES CON CÁLCULOS ---
+    # Usamos 'annotate' para agregar campos calculados a cada empresa.
+    empresas_con_balance = Empresa.objects.annotate(
+        # Suma las cantidades de las líneas de movimiento si el tipo es 'IN'
+        total_in=Coalesce(Sum('movimientos__lineas__cantidad', filter=F('movimientos__tipo') == 'IN'), Value(0)),
+        # Suma las cantidades de las líneas de movimiento si el tipo es 'OUT'
+        total_out=Coalesce(Sum('movimientos__lineas__cantidad', filter=F('movimientos__tipo') == 'OUT'), Value(0))
+    ).annotate(
+        # Calcula el balance restando las salidas de las entradas
+        balance=F('total_in') - F('total_out')
+    ).order_by('razon_social')
+    
     context = {
         'title': 'Gestión de Empresas',
         'header_title': 'Empresas', # Título para el encabezado principal
-        'empresas': empresas_reales,
+        # Pasamos la lista de empresas con los datos calculados a la plantilla
+        'empresas': empresas_con_balance,
     }
 
     return render(request, 'empresas/lista_empresas.html', context)

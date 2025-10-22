@@ -6,22 +6,21 @@ from django.contrib.auth.views import LoginView
 from django.contrib import messages
 from empleados.forms import EmpleadoCreationForm
 
-# estos de abajo ya estaban aca
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 import random #genera balances mockeados
-from empresas.models import Empresa #para obtener la lista real de empresas
+from django.db.models import Sum, F, Value
+from django.db.models.functions import Coalesce
+from empresas.models import Empresa 
+from pallets.models import Pallet 
+from movimientos.views import _snapshot_stock
 
-# 1. Vista para la página principal (el 'index')
 def index(request):
-    # Aquí puedes agregar la lógica que tenías en tu vista index original.
-    # Por ahora, simplemente renderizamos una plantilla.
     return render(request, 'dashboard/index.html', {'title': 'Página Principal'})
 
-# 2. Vista para el registro de nuevos usuarios (ahora son Empleados)
 class SignUpView(CreateView):
     form_class = EmpleadoCreationForm
-    success_url = reverse_lazy('login') # Redirige al login después de un registro exitoso
+    success_url = reverse_lazy('login') 
     template_name = 'registration/register.html'
 
     def form_valid(self, form):
@@ -34,12 +33,12 @@ class RememberMeLoginView(LoginView):
     def form_valid(self, form):
         remember_me = form.cleaned_data.get('remember_me')
         if not remember_me:
-            self.request.session.set_expiry(0) # Expira al cerrar el navegador
+            self.request.session.set_expiry(0)
         else:
-            self.request.session.set_expiry(1209600) # 2 semanas de sesión
+            self.request.session.set_expiry(1209600) 
         return super().form_valid(form)
 
-@login_required #solo usuarios logueados accedan
+@login_required 
 def home(request):
     """
     Vista principal del Dashboard. 
@@ -53,43 +52,34 @@ def home(request):
         'usuario': request.user.get_username(),
     }
     
-    #donut mockeado
-    total_pallets = 10000
+    _, contadores = _snapshot_stock()
+    
     balance_stock = {
-        'total': total_pallets,
-        'disponibles': 4500,
-        'en_uso': 3000,
-        'danados': 2500,
+        'disponibles': contadores.get('disponibles', 0),
+        'en_uso': contadores.get('en_uso', 0),
+        'danados': contadores.get('danados', 0),
+        'total': sum(contadores.values())
     }
     
-    #balance por empresa
-    #obtener empresas
-    empresas_reales = Empresa.objects.all().order_by('razon_social')
+    # --- CÁLCULO REAL DEL BALANCE POR EMPRESA ---
+    # Usamos 'annotate' para agregar los campos calculados a cada empresa.
+    balance_empresas = Empresa.objects.annotate(
+        total_in=Coalesce(Sum('movimientos__lineas__cantidad', filter=F('movimientos__tipo') == 'IN'), Value(0)),
+        total_out=Coalesce(Sum('movimientos__lineas__cantidad', filter=F('movimientos__tipo') == 'OUT'), Value(0))
+    ).annotate(
+        balance=F('total_in') - F('total_out')
+    ).order_by('-balance') # Ordenamos para ver los balances más altos primero
     
-    lista_balance_empresas = []
-    
-    for empresa in empresas_reales:
-        total_in = random.randint(300, 1500)
-        total_out = random.randint(300, 1500)
-        balance_qty = total_in - total_out
-        
-        lista_balance_empresas.append({
-            'nombre': empresa.razon_social,
-            'total_in': total_in,
-            'total_out': total_out,
-            'balance': balance_qty,
-            'es_proveedor': empresa.es_proveedor
-        })
         
     es_admin = request.user.is_superuser
 
     context = {
-        'header_title': 'Dashboard', # Título para el encabezado principal
-        'title': 'Dashboard', # Título para la página (y como fallback)
+        'header_title': 'Dashboard', 
+        'title': 'Dashboard',
         'es_admin': es_admin,
         'header': datos_header,
         'balance_stock': balance_stock,
-        'balance_empresas': lista_balance_empresas,
+        'balance_empresas': balance_empresas,
     }
 
     return render(request, 'dashboard/home.html', context)
