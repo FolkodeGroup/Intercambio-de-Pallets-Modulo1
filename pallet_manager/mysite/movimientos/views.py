@@ -15,40 +15,62 @@ from django.db import transaction
 from .models import LineaMovimiento
 from .forms import EgresoMovimientoForm, LineaMovimientoForm 
 
+from django.forms import inlineformset_factory 
+from .forms import IngresoMovimientoForm, LineaMovimientoForm
+from .models import Movimiento, LineaMovimiento
+
 def ingresar_movimiento(request):
-    # Usamos un formset para las líneas de pallets, igual que antes
-    LineaFormSet = modelformset_factory(LineaMovimiento, form=LineaMovimientoForm, extra=1, can_delete=True)
+    
+    # 1. Usa inlineformset_factory
+    # Le decimos que LineaMovimiento está conectado a Movimiento
+    LineaFormSet = inlineformset_factory(
+        Movimiento,                 # Modelo Padre
+        LineaMovimiento,            # Modelo Hijo
+        form=LineaMovimientoForm,   # El form a usar para cada línea
+        extra=1,                    # Cuántas líneas vacías mostrar
+        can_delete=True
+    )
 
     if request.method == "POST":
-        # Usamos nuestro nuevo formulario IngresoMovimientoForm
         movimiento_form = IngresoMovimientoForm(request.POST)
-        formset = LineaFormSet(request.POST, queryset=LineaMovimiento.objects.none())
 
-        if movimiento_form.is_valid() and formset.is_valid():
+        # 2. VALIDAMOS EL FORMULARIO PADRE PRIMERO
+        if movimiento_form.is_valid():
+            # Creamos el objeto padre en memoria
             movimiento = movimiento_form.save(commit=False)
             movimiento.usuario_creacion = request.user
-            movimiento.save()  # Guardamos el movimiento principal
-
-            # Guardamos las líneas asociadas
-            for form in formset.cleaned_data:
-                if form: # Asegurarse de que el form no esté vacío
-                    linea = form.save(commit=False)
-                    linea.movimiento = movimiento
-                    linea.save()
             
-            return redirect("movimientos:movimientos") # Redirigimos a la lista de movimientos
+            # 3. CREAMOS EL FORMSET VINCULADO AL PADRE (instance=movimiento)
+            formset = LineaFormSet(request.POST, instance=movimiento)
+
+            # 4. VALIDAMOS EL FORMSET
+            if formset.is_valid():
+                # 5. GUARDAMOS TODO (¡Así de simple!)
+                movimiento.save()  # Guarda el padre
+                formset.save()     # Guarda todos los hijos y asigna la FK automáticamente
+
+                messages.success(request, "✅ Ingreso registrado correctamente.")
+                return redirect("movimientos:movimientos")
+            else:
+                # Si el formset es inválido (ej: líneas sin cantidad)
+                messages.error(request, "Revisá los datos en las líneas de pallets.")
+        else:
+            # Si el form principal es inválido
+            messages.error(request, "Revisá los datos principales del ingreso.")
+            # Necesitamos inicializar un formset vacío para mostrar los errores
+            formset = LineaFormSet(request.POST)
 
     else:
-        # Al cargar la página por primera vez (GET)
+        # GET (Carga inicial)
         movimiento_form = IngresoMovimientoForm()
-        formset = LineaFormSet(queryset=LineaMovimiento.objects.none())
+        # 6. Creamos un formset vacío pero vinculado a un padre vacío
+        formset = LineaFormSet(instance=Movimiento()) 
 
     context = {
         "movimiento_form": movimiento_form,
         "formset": formset,
-        "title": "Ingresar Movimiento de Pallets" # Un título más específico
+        "title": "Ingresar Movimiento de Pallets"
     }
-    # Renderizamos una nueva plantilla
     return render(request, "movimientos/ingresar_movimiento.html", context)
 
 def registrar_movimiento(request):
