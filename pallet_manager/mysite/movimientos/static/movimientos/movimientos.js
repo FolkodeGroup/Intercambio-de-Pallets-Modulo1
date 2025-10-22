@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const btnTipo = document.getElementById("filtro-btn");
     const menuTipo = document.getElementById("menu-tipo");
-
+    
     const tabla = document.getElementById("tabla-movimientos");
     const botonVerMas = document.getElementById("btn-more");
 
@@ -13,8 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let mostradas = LIMITE_INICIAL;
     let filtroActivo = "todos"; // 🔸 Filtro actual
 
-    toggleMenu(btnOrdenar, menuOrdenar, [menuTipo]);
-    toggleMenu(btnTipo, menuTipo, [menuOrdenar]);
+    //toggleMenu(btnOrdenar, menuOrdenar, [menuTipo]);
+    //toggleMenu(btnTipo, menuTipo, [menuOrdenar]);
 
     // =========================================================
     // 🔸 FUNCIONES AUXILIARES
