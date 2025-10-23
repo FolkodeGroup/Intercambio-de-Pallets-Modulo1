@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block head %} 
-    <link rel="stylesheet" href="{% static 'movimientos/movimientos.css'%}">
+    <link rel="stylesheet" href="{% static 'movimientos/movimientosStyles.css'%}">
     <script src="{% static 'movimientos/movimientos.js' %}"></script>
 {% endblock %}
 
@@ -27,9 +27,10 @@
                         <div class="bar"></div>
                         <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M480-344 240-584l56-56 184 184 184-184 56 56-240 240Z"/></svg>
                         
-                        <div id="menu-ordenar" class="dropdown-menu" style="display: none;">
-                            <span data-col="0">Empresa</span>
-                            <span data-col="1">Fecha</span>
+                        <div id="menu-ordenar" class="menu-ordenar"" style="display: none;">
+                            <span data-col="0">Sin filtros</span>
+                            <span data-col="1">Empresa</span>
+                            <span data-col="2">Fecha</span>
                             <span data-col="3">Cantidad</span>
                             <span data-col="4">Tipo</span>
                             <span data-col="5">Responsable</span>
@@ -83,21 +84,7 @@
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr style="background-color: #07494D; border-bottom: 1px solid #0D7A7F; position: relative;">
-                            <td style="padding: 0.75rem;">hola</td>
-                            <td style="padding: 0.75rem;">24/06/2032</td>
-                            <td style="padding: 0.75rem;">IN</td>
-                            <td style="padding: 0.75rem;">323231</td>
-                            <td style="padding: 0.75rem;">IN</td>
-                            <td style="padding: 0.75rem;">mau</td>
-                            <td style="width: 20px;">
-                                <button class="btn-cel-actions" style="background-color: transparent; border: none;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"/></svg>
-                                </button>
-                            </td>
-                            
-                            
+                    <tbody>  
                         </tr>
                         {% for movimiento in movimientos %}
                             {% for linea in movimiento.lineas.all %}
@@ -108,6 +95,19 @@
                                     <td style="padding: 0.75rem;">{{ linea.cantidad }}</td>
                                     <td style="padding: 0.75rem;">{{ linea.tipo_pallet }}</td>
                                     <td style="padding: 0.75rem;">{{ user.username|default:'Usuario' }}</td>
+                                    <td style="width: 20px;">
+                                        <button class="btn-cel-actions" data-menu="menuCelActions" style="background-color: transparent; border: none;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="30px" viewBox="0 -960 960 960" width="30px" fill="#e3e3e3"><path d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"/></svg>
+                                        </button>
+                                        <div class="menu-cel-actions" id="menu-cel-actions">
+                                            <button type="button" id="menu-cel-actions-btn-pdf">
+                                                <span>Exportar PDF</span>
+                                            </button>
+                                            <button type="button" id="menu-cel-actions-btn-remito">
+                                                <span>Ver remito</span>
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
                                 {% endfor %} 
                             {% empty %}

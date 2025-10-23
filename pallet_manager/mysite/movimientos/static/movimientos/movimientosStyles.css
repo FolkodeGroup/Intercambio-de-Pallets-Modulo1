@@ -79,38 +79,8 @@
     position: relative;
 }
 
-.menu-ordenar {
-    position: absolute !important;
-    top: 100%;
-    left: 0;
-    background-color: #00393d;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+.menu-opciones, .menu-ordenar {
     margin-top: 5px;
-    padding: 5px 0;
-    display: flex;
-    flex-direction: column;
-    width: 150px;
-    z-index: 10;
-    
-}
-
-.dropdown-menu span {
-    color: #e3e3e3;
-    padding: 8px 12px;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.dropdown-menu span:hover {
-    background-color: #0D7A7F !important;
-}
-#menu-ordenar span.activo {
-    background-color: #0BC0A2 !important;
-    color: white;
-}
-
-.menu-opciones {
     position: absolute;
     top: 100%; /* debajo del botón */
     left: 0;
@@ -123,15 +93,37 @@
     z-index: 10;
 }
 
-.menu-opciones span {
+.menu-opciones span, .menu-ordenar span {
     padding: 0.5rem 1rem;
     cursor: pointer;
     color: #e3e3e3;
     transition: background 0.2s;
 }
 
-.menu-opciones span:hover {
-    background-color: #07494D;
+.menu-opciones span:hover, .menu-ordenar span:hover {
+    background-color: #0BC0A2;
+    color: white;
+}
+
+.menu-cel-actions{
+    display: none;
+}
+.menu-cel-actions button{
+    background-color: inherit;
+    padding: 5px 10px;
+    border: none;
+}
+.menu-cel-actions button:hover{
+    background-color: #0BC0A2;
+    color: white;
+}
+.active-actions{
+    right: 20px;
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    background-color: #00393d !important;
 }
 
 /* Filtro activo */
