@@ -3,6 +3,7 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'movimientos/movimientos.css' %}">
+    <link rel="stylesheet" href="{% static 'registrar_ingreso/registrar_ingreso.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -32,8 +33,14 @@
                 </fieldset>
 
                 <div style="text-align: center; margin-top: 1.5rem;">
-                    <button type="submit" class="btn btn-success" style="background-color: #002D33; border: none; padding: 0.5rem 1.5rem; font-size: 1rem; color: white; border-radius: 4px;">
+                    <button type="button" id="btn-back" class="btn btn-success" style="background-color: #002D33; border: none; padding: 0.5rem 1.5rem; font-size: 1rem; color: white; border-radius: 4px;">
+                        Volver
+                    </button>
+                    <button type="submit" name="btn-save" id="btn-save" class="btn btn-success" style="background-color: #002D33; border: none; padding: 0.5rem 1.5rem; font-size: 1rem; color: white; border-radius: 4px;">
                         Guardar Ingreso
+                    </button>
+                    <button type="submit" name="btn-remito" id="btn-remito" class="btn btn-success" style="background-color: #002D33; border: none; padding: 0.5rem 1.5rem; font-size: 1rem; color: white; border-radius: 4px;">
+                        Generar Remito
                     </button>
                 </div>
             </form>

@@ -1,12 +1,25 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Empresa
+from .forms import EmpresaForm
 from django.db.models import Sum, Value, Case, When, F, Q
 from django.db.models.functions import Coalesce
 import random # Importamos random para generar datos de prueba
 from django.contrib import messages
 from django.urls import reverse
+from django.shortcuts import render, redirect
+from django.contrib import messages  # <-- Importa messages
 
-# Vista principal para la lista de empresas
+
+# empresas/views.py
+
+from django.shortcuts import render, redirect
+from django.contrib import messages  # <-- Importa messages
+from .models import Empresa
+from .forms import EmpresaForm       # <-- ¡Importa tu formulario!
+# ... (otros imports)
+
+
+# --- Tu vista 'lista_empresas' (la dejo como referencia) ---
 def lista_empresas(request):
     """
     Muestra la página de gestión/listado de empresas, calculando los totales
@@ -53,6 +66,9 @@ def lista_empresas(request):
             'search_query': search_query,
         }
         return render(request, 'empresas/lista_empresas.html', context)
+
+
+# --- VISTA 'crear_empresa' (¡LA CORRECCIÓN!) ---
 
 def crear_empresa(request):
     """
