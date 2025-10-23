@@ -13,79 +13,23 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Datos de ejemplo (mock) -->
-                <tr>
-                    <td class="fw-bold px-3">Cliente A</td>
-                    <td class="text-end">1.200</td>
-                    <td class="text-end">900</td>
-                    <td class="text-end text-success fw-bold px-3">+300</td>
-                </tr>
-                <tr>
-                    <td class="fw-bold px-3">Proveedor B</td>
-                    <td class="text-end">400</td>
-                    <td class="text-end">650</td>
-                    <td class="text-end text-danger fw-bold px-3">-250</td>
-                </tr>
-                <tr>
-                    <td class="fw-bold px-3">Cliente C</td>
-                    <td class="text-end">800</td>
-                    <td class="text-end">800</td>
-                    <td class="text-end fw-bold px-3">0</td>
-                </tr>
-                <tr>
-                    <td class="fw-bold px-3">Cliente 2</td>
-                    <td class="text-end">1.200</td>
-                    <td class="text-end">900</td>
-                    <td class="text-end text-danger fw-bold px-3">-200</td>
-                </tr>
-                <tr>
-                    <td class="fw-bold px-3">Proveedor C</td>
-                    <td class="text-end">400</td>
-                    <td class="text-end">600</td>
-                    <td class="text-end text-success fw-bold px-3">+300</td>
-                </tr>
-                <tr>
-                    <td class="fw-bold px-3">Logística Sur</td>
-                    <td class="text-end">2.500</td>
-                    <td class="text-end">2.500</td>
-                    <td class="text-end fw-bold px-3">0</td>
-                </tr>
-                <tr>
-                    <td class="fw-bold px-3">Transporte Norte</td>
-                    <td class="text-end">1.800</td>
-                    <td class="text-end">2.100</td>
-                    <td class="text-end text-danger fw-bold px-3">-300</td>
-                </tr>
-                <tr>
-                    <td class="fw-bold px-3">Cliente F</td>
-                    <td class="text-end">750</td>
-                    <td class="text-end">500</td>
-                    <td class="text-end text-success fw-bold px-3">+250</td>
-                </tr>
-                <tr>
-                    <td class="fw-bold px-3">Proveedor D</td>
-                    <td class="text-end">950</td>
-                    <td class="text-end">1.100</td>
-                    <td class="text-end text-danger fw-bold px-3">-150</td>
-                </tr>
-                <tr>
-                    <td class="fw-bold px-3">Distribuidora Oeste</td>
-                    <td class="text-end">300</td>
-                    <td class="text-end">150</td>
-                    <td class="text-end text-success fw-bold px-3">+150</td>
-                </tr>
-
-                <!-- Bucle para datos reales (preparado para el futuro) -->
+                <!-- Bucle para datos reales -->
                 {% for empresa in balance_empresas %}
                 <tr>
-                    <td class="fw-bold px-3">{{ empresa.nombre }}</td>
+                    <td class="fw-bold px-3">{{ empresa.razon_social }}</td>
                     <td class="text-end">{{ empresa.total_in|floatformat:0|intcomma }}</td>
                     <td class="text-end">{{ empresa.total_out|floatformat:0|intcomma }}</td>
-                    {% if empresa.balance >= 0 %}
+                    {% if empresa.balance > 0 %}
                         <td class="text-end text-success fw-bold px-3">+{{ empresa.balance|floatformat:0|intcomma }}</td>
-                    {% else %}
+                    {% elif empresa.balance < 0 %}
                         <td class="text-end text-danger fw-bold px-3">{{ empresa.balance|floatformat:0|intcomma }}</td>
+                    {% else %}
+                        <td class="text-end text-white-50 fw-bold px-3">0</td>
                     {% endif %}
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center text-white-50 py-3">No hay datos de balance para mostrar.</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -93,6 +37,6 @@
     </div>
 
     <div class="py-3 text-center">
-        <a href="#" class="btn pm-btn-view-more">Ver más</a>
+        <a href="{% url 'empresas:lista_empresas' %}" class="btn pm-btn-view-more">Ver más</a>
     </div>
 </div>

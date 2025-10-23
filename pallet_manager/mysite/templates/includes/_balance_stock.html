@@ -5,29 +5,29 @@
         <div class="text-center">
             <p class="mb-2 fw-normal small text-dark">Disponibles</p>
             <div class="pm-status-circle pm-status-circle--disponible"> 
-                <h5 class="fw-bold mb-0 text-dark">{{ disponibles|default:"0000" }}</h5>
+                <h5 class="fw-bold mb-0 text-dark">{{ balance_stock.disponibles|default:"0" }}</h5>
             </div>
         </div>
 
         <div class="text-center">
             <p class="mb-2 fw-normal small text-dark">En uso</p>
             <div class="pm-status-circle pm-status-circle--en-uso"> 
-                <h5 class="fw-bold mb-0 text-dark">{{ en_uso|default:"0000" }}</h5>
+                <h5 class="fw-bold mb-0 text-dark">{{ balance_stock.en_uso|default:"0" }}</h5>
             </div>
         </div>
 
         <div class="text-center">
             <p class="mb-2 fw-normal small text-dark">Dañados</p>
             <div class="pm-status-circle pm-status-circle--dañado"> 
-                <h5 class="fw-bold mb-0 text-dark">{{ dañados|default:"0000" }}</h5>
+                <h5 class="fw-bold mb-0 text-dark">{{ balance_stock.danados|default:"0" }}</h5>
             </div>
         </div>
     </div>
 
-    <div class="d-flex justify-content-center align-items-center" style="height: 250px; position: relative; padding-bottom: 1rem;"> 
-        <canvas id="palletDoughnutChart" style="max-height: 250px;"></canvas>
+    <div class="d-flex justify-content-center align-items-center" style="height: 350px; position: relative; padding-bottom: 1rem;"> 
+        <canvas id="palletDoughnutChart" style="max-height: 300px;"></canvas>
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
-            <h3 class="fw-bold text-dark mb-0">{{ total_pallets|default:"10000" }}</h3>
+            <h3 class="fw-bold text-dark mb-0">{{ balance_stock.total|default:"0" }}</h3>
             <small class="text-secondary text-dark">Pallets</small>
         </div>
     </div>
@@ -43,9 +43,9 @@
         labels: ['Disponibles', 'En uso', 'Dañados'],
         datasets: [{
             data: [
-                parseInt('{{ disponibles|default:4000 }}'), 
-                parseInt('{{ en_uso|default:3000 }}'),     
-                parseInt('{{ dañados|default:3000 }}')     
+                parseInt('{{ balance_stock.disponibles|default:0 }}'), 
+                parseInt('{{ balance_stock.en_uso|default:0 }}'),     
+                parseInt('{{ balance_stock.danados|default:0 }}')     
             ],
             backgroundColor: CHART_COLORS,
             borderWidth: 0 
