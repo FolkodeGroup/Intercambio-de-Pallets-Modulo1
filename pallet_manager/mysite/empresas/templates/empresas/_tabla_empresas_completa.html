@@ -7,6 +7,9 @@
                 <th scope="col" class="fw-bold px-4">Razón Social</th>
                 <th scope="col" class="fw-bold">CUIT</th>
                 <th scope="col" class="fw-bold">Ubicación</th>
+                <th scope="col" class="fw-bold">Email</th>
+                <th scope="col" class="fw-bold">Teléfono</th>
+                <th scope="col" class="fw-bold">Tipo</th>
                 <th scope="col" class="text-end fw-bold">Total In</th>
                 <th scope="col" class="text-end fw-bold">Total Out</th>
                 <th scope="col" class="text-end fw-bold">Balance</th>
@@ -19,6 +22,15 @@
                 <td class="fw-bold px-4">{{ empresa.razon_social }}</td>   
                 <td>{{ empresa.cuit }}</td>
                 <td>{{ empresa.direccion|default:"N/A" }}</td>
+                <td>{{ empresa.email|default:"N/A" }}</td>
+                <td>{{ empresa.telefono|default:"N/A" }}</td>
+                <td>
+                    {% if empresa.es_proveedor %}
+                        <span class="badge bg-info text-dark rounded-pill">Proveedor</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark rounded-pill">Cliente</span>
+                    {% endif %}
+                </td>
                 <td class="text-end">{{ empresa.total_in|floatformat:0|intcomma }}</td>
                 <td class="text-end">{{ empresa.total_out|floatformat:0|intcomma }}</td>
                 <td class="text-end fw-bold">
@@ -46,7 +58,7 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="7" class="text-center text-white-50 py-3">No hay empresas registradas.</td>
+                <td colspan="10" class="text-center text-white-50 py-3">No hay empresas registradas.</td>
             </tr>
             {% endfor %}
         </tbody>

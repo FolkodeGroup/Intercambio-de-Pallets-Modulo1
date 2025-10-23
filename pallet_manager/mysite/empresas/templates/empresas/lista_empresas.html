@@ -3,24 +3,40 @@
 
 {% block title %}Empresas | Pallet Manager{% endblock %}
 
-{% block content %}
-{# Mantenemos el encabezado con su padding izquierdo (ps-3) #}
-<div class="d-flex justify-content-between align-items-center mb-4 ps-3 pt-4">
-    <h1 class="h5 text-light fw-bold">{{ title }}</h1>
-</div>
+{% block extra_head %}
+<style>
+    .table-container-collapsed {
+        max-height: 450px; /* Altura inicial limitada para la vista previa */
+        overflow-y: auto;
+    }
+</style>
+{% endblock %}
 
-{# 💡 SOLUCIÓN: Usamos ps-3 para mantener el margen izquierdo y pe-2 para reducir el derecho. #}
-<div class="ps-3 pe-1">
+{% block content %}
+
+<div class="container-fluid mt-4 px-4">
+    <h2 class="h4 fw-bold text-light mb-4">Gestión de Empresas</h2>
+
     <div class="row">
         <div class="col-12">
             
-            <div class="d-flex justify-content-between mb-3">
-                <div class="input-group" style="max-width: 300px;">
-                    <span class="input-group-text pm-search-icon text-dark"><i class="bi bi-search"></i></span> 
-                    <input type="text" class="form-control pm-search-input text-dark" placeholder="Buscar">
+            {% if messages %}
+                <div class="mb-3">
+                    {% for message in messages %}
+                        <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
                 </div>
-                
-                <a href="{% url 'empresas:crear_empresa' %}" class="btn pm-btn-primary fw-bold text-nowrap">
+            {% endif %}
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="input-group" style="max-width: 400px;">
+                    <span class="input-group-text pm-search-icon text-dark"><i class="bi bi-search"></i></span> 
+                    <input type="text" class="form-control pm-search-input text-dark" id="search-input" placeholder="Buscar por Razón Social, CUIT o Ubicación..." name="q" value="{{ search_query|default:'' }}">
+                </div>                
+                <a href="{% url 'empresas:crear_empresa' %}" class="btn btn-primary fw-bold rounded-pill text-nowrap">
                     + Nueva empresa
                 </a>
             </div>
@@ -29,13 +45,75 @@
                 
                 <h2 class="h6 fw-bold text-white text-center mb-3 pt-3">Balance por empresa</h2>
                 
-                {% include 'empresas/_tabla_empresas.html' %} 
+                <div id="tabla-empresas-container" class="table-container-collapsed">
+                    {% include 'empresas/_tabla_empresas.html' %} 
+                </div>
                 
                 <div class="text-center mt-3 pb-3">
-                    <button class="btn pm-btn-secondary fw-bold">Ver más</button>
+                    <button type="button" class="btn pm-btn-secondary fw-bold" data-bs-toggle="modal" data-bs-target="#tablaCompletaModal">Ver más</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="tablaCompletaModal" tabindex="-1" aria-labelledby="tablaCompletaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-fullscreen modal-dialog-centered">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title" id="tablaCompletaModalLabel">Listado Completo de Empresas</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="modal-table-content">
+            <p class="text-center">Cargando...</p>
+        </div>
+      </div>
+      <div class="modal-footer border-secondary">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('search-input');
+        const tableContainer = document.getElementById('tabla-empresas-container');
+        const tablaModal = document.getElementById('tablaCompletaModal');
+        let searchTimeout;
+
+        searchInput.addEventListener('input', function () {
+            clearTimeout(searchTimeout);
+            const query = this.value;
+            
+            searchTimeout = setTimeout(() => {
+                fetch(`{% url 'empresas:lista_empresas' %}?q=${encodeURIComponent(query)}&partial=true`)
+                    .then(response => response.text())
+                    .then(html => {
+                        tableContainer.innerHTML = html;
+                        const newTooltipTriggerList = tableContainer.querySelectorAll('[data-bs-toggle="tooltip"]');
+                        [...newTooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+                    });
+            }, 300);
+        });
+
+        tablaModal.addEventListener('show.bs.modal', function () {
+            const modalTableContent = document.getElementById('modal-table-content');
+            const currentQuery = searchInput.value;
+            
+            fetch(`{% url 'empresas:lista_empresas' %}?q=${encodeURIComponent(currentQuery)}&partial=true&view=complete`)
+                .then(response => response.text())
+                .then(html => {
+                    modalTableContent.innerHTML = html;
+                    const newTooltipTriggerList = modalTableContent.querySelectorAll('[data-bs-toggle="tooltip"]');
+                    [...newTooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+                });
+        });
+
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    });
+</script>
+
 {% endblock %}
