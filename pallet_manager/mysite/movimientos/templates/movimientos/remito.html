@@ -1,42 +1,47 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block head %} 
+    <link rel="stylesheet" href="{% static 'remito/remito.css'%}">
+{% endblock %}
 
 {% block content %}
-<div class="remito-container" style="background-color: #fff; color: #000; padding: 2rem; border-radius: 8px;">
-    <h2 style="text-align:center;">{{ title }}</h2>
-    <hr>
+<main class="screen-remito-container">
+    <div class="remito-container" style="background-color: #fff; color: #000; padding: 2rem; border-radius: 8px;">
+        <h2 style="text-align:center;">{{ title }}</h2>
+        <hr>
 
-    <h4>Datos del Movimiento</h4>
-    <p><strong>ID Movimiento:</strong> {{ movimiento.id }}</p>
-    <p><strong>Fecha:</strong> {{ movimiento.fecha_creacion|date:"d/m/Y H:i" }}</p>
-    <p><strong>Usuario:</strong> {{ movimiento.usuario_creacion.username }}</p>
-    <p><strong>Empresa:</strong> {{ movimiento.empresa }}</p>
-    <p><strong>Observaciones:</strong> {{ movimiento.observaciones }}</p>
-    <hr>
-    <h4>Detalle de Pallets</h4>
-    <table style="width:100%; border-collapse: collapse;">
-        <thead>
-            <tr style="background-color:#07494D; color:white;">
-                <th style="padding:8px;">Motivo</th>
-                <th style="padding:8px;">Cantidad</th>
-                <th style="padding:8px;">Ubicación</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for linea in lineas %}
-            <tr style="border-bottom:1px solid #ccc;">
-                <td style="padding:8px;">{{ movimiento.tipo }}</td>
-                <td>{{ linea.tipo_pallet }}</td>
-                <td>{{ linea.cantidad }}</td>
-                <td>Origen: {{ linea.movimiento.ubicacion_origen }} <br> Destino: {{ linea.movimiento.ubicacion_destino }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <h4>Datos del Movimiento</h4>
+        <p><strong>N°:</strong> {{ movimiento.id }}</p>
+        <p><strong>Fecha:</strong> {{ movimiento.fecha_creacion|date:"d/m/Y H:i" }}</p>
+        <p><strong>Usuario:</strong> {{ movimiento.usuario_creacion.username }}</p>
+        <p><strong>Empresa:</strong> {{ movimiento.empresa }}</p>
+        <p><strong>Observaciones:</strong> {{ movimiento.observaciones }}</p>
+        <hr>
+        <h4>Detalle de Pallets</h4>
+        <table style="width:100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background-color:#07494D; color:white;">
+                    <th style="padding:8px;">Motivo</th>
+                    <th style="padding:8px;">Cantidad</th>
+                    <th style="padding:8px;">Ubicación</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for linea in lineas %}
+                <tr style="border-bottom:1px solid #ccc;">
+                    <td style="padding:8px;">{{ movimiento.tipo }}</td>
+                    <td>{{ linea.tipo_pallet }}</td>
+                    <td>{{ linea.cantidad }}</td>
+                    <td>Origen: {{ linea.movimiento.ubicacion_origen }} <br> Destino: {{ linea.movimiento.ubicacion_destino }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-    <div style="text-align:center; margin-top:2rem;">
-        <a href="{% url 'movimientos:movimientos' %}" class="btn btn-primary">Volver a Movimientos</a>
+        <div style="text-align:center; margin-top:2rem;">
+            <a href="{% url 'movimientos:movimientos' %}" class="btn btn-primary">Volver a Movimientos</a>
+        </div>
     </div>
-</div>
+</main>
 {% endblock %}

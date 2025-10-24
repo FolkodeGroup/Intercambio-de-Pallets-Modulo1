@@ -56,7 +56,8 @@ def ingresar_movimiento(request):
     if request.method == "POST":
         movimiento_form = IngresoMovimientoForm(request.POST)
         formset = LineaFormSet(request.POST)
-
+        generar_remito = "btn-remito" in request.POST
+        
         if movimiento_form.is_valid() and formset.is_valid():
             movimiento = movimiento_form.save(commit=False)
             movimiento.usuario_creacion = request.user
@@ -64,6 +65,10 @@ def ingresar_movimiento(request):
             formset.instance = movimiento
             formset.save()
             messages.success(request, "✅ Movimiento ingresado correctamente.")
+            
+            if generar_remito:
+                return redirect("movimientos:ver_remito", movimiento_id=movimiento.id)
+            
             return redirect("movimientos:movimientos")
     else:
         movimiento_form = IngresoMovimientoForm()
@@ -250,6 +255,8 @@ def registrar_egreso(request):
     if request.method == "POST":
         movimiento_form = EgresoMovimientoForm(request.POST)
         formset = LineaFormSet(request.POST, queryset=LineaMovimiento.objects.none())
+        generar_remito = "btn-remito" in request.POST
+        
         # Filtramos líneas válidas (cantidad > 0 y tipo pallet seleccionado)
         lineas_validas = []
         if formset.is_valid():
@@ -276,7 +283,7 @@ def registrar_egreso(request):
                         linea.movimiento = movimiento
                         linea.save()
 
-                if "btn-remito" in request.POST:
+                if generar_remito:
                     return redirect("movimientos:ver_remito", movimiento_id=movimiento.id)
 
                 messages.success(request, "✅ Egreso registrado correctamente.")
