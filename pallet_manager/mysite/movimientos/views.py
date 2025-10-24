@@ -134,13 +134,15 @@ def movimientos(request):
     return render(request, 'movimientos/movimientos.html', context)
 
 #       ⬇⬇⬇⬇ FUNCIONES DE EXPORTAR COMO CSV Y PDF ⬇⬇⬇⬇
-import csv
-from django.http import HttpResponse
-from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-from .models import Movimiento
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+from .models import Movimiento, LineaMovimiento
+import csv
+from reportlab.lib.pagesizes import letter, landscape
 
 # --- EXPORTAR CSV ---
 def exportar_csv(request):
@@ -227,6 +229,65 @@ def exportar_pdf(request):
     doc.build(elements)
     return response
 
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponse
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.enums import TA_CENTER, TA_LEFT
+from reportlab.lib import colors
+from .models import Movimiento
+
+def generar_remito_pdf(request, movimiento_id):
+    # --- Buscar el movimiento ---
+    movimiento = get_object_or_404(Movimiento, id=movimiento_id)
+    lineas = movimiento.lineas.all()
+
+    # --- Configurar la respuesta ---
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="remito_{movimiento.id}.pdf"'
+
+    # --- Crear documento ---
+    doc = SimpleDocTemplate(response, pagesize=A4, rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=40)
+    elements = []
+
+    # --- Estilos ---
+    styles = getSampleStyleSheet()
+    styles.add(ParagraphStyle(name='CenterTitle', alignment=TA_CENTER, fontSize=16, leading=20, spaceAfter=12))
+    styles.add(ParagraphStyle(name='SectionHeader', fontSize=12, leading=14, textColor=colors.HexColor("#07494D"), spaceAfter=6))
+    styles.add(ParagraphStyle(name='NormalLabel', fontSize=10, leading=12, spaceAfter=4))
+
+    # --- Título ---
+    title_text = f"Remito de {'Ingreso' if movimiento.tipo == 'IN' else 'Egreso'}"
+    elements.append(Paragraph(f"<b>{title_text}</b>", styles['CenterTitle']))
+    elements.append(Spacer(1, 12))
+
+    # --- Datos del Movimiento ---
+    elements.append(Paragraph("Datos del Movimiento", styles['SectionHeader']))
+    elements.append(Paragraph(f"N°: {movimiento.id}", styles['NormalLabel']))
+    elements.append(Paragraph(f"Fecha/Hora: {movimiento.fecha_hora.strftime('%d/%m/%Y %H:%M')}", styles['NormalLabel']))
+    elements.append(Paragraph(f"Empresa: {movimiento.empresa}", styles['NormalLabel']))
+    elements.append(Spacer(1, 12))
+
+    # --- Ubicación y Responsable ---
+    elements.append(Paragraph("Ubicación y Responsable", styles['SectionHeader']))
+    elements.append(Paragraph(f"Origen: {movimiento.ubicacion_origen}", styles['NormalLabel']))
+    elements.append(Paragraph(f"Destino: {movimiento.ubicacion_destino}", styles['NormalLabel']))
+    elements.append(Paragraph(f"Responsable: {movimiento.usuario_creacion.username}", styles['NormalLabel']))
+    elements.append(Paragraph(f"Empleado: {movimiento.usuario_creacion.username}", styles['NormalLabel']))
+    elements.append(Spacer(1, 12))
+
+    # --- Detalle de Pallets ---
+    elements.append(Paragraph("Detalle de Pallets", styles['SectionHeader']))
+    for idx, linea in enumerate(lineas, start=1):
+        elements.append(Paragraph(f"    Motivo: {movimiento.tipo}", styles['NormalLabel']))
+        elements.append(Paragraph(f"   Cantidad: {linea.cantidad}", styles['NormalLabel']))
+        elements.append(Paragraph(f"   Tipo: {linea.tipo_pallet}", styles['NormalLabel']))
+        elements.append(Spacer(1, 6))
+
+    # --- Generar PDF ---
+    doc.build(elements)
+    return response
 
 #nuevo egreso
 def registrar_egreso(request):

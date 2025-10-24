@@ -1,6 +1,67 @@
-.screen-remito-container{
+.remito-container{
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+}
+.remito-title-container{
+    margin-bottom: 2rem;
+}
+.remito-subtitle-container{
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.remito{
+    height: 100%;
+    max-width: 40vw;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center;
+    padding: 25px 0;
+}
+.remito-table-container{
+    font-size: 20px;
+    flex: 1;
+    
+}
+.remito-table td{
+    padding: 0 2rem;
+}
+.remito-table tr{
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 8px 0;
+}
+.remito-table th,
+.remito-table td{
+    color: #3B3737;
+    text-align: center;
+}
+.remito-table:nth-of-type(2) thead tr:first-child,
+.remito-table:nth-of-type(2) tbody tr:first-child{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.remito-btn-container{
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+.remito-btn-container .btn-success{
+    background: #002D33;
+    width: 250px;
+    padding: 10px 20px;
+    font-size: 20px;
+}
+.btn-success:hover{
+    background: #0BC0A2;
+    color: #002D33
 }

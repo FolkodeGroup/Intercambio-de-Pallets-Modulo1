@@ -1,10 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
     const btnOrdenar = document.getElementById("ordenar-btn");
     const menuOrdenar = document.getElementById("menu-ordenar");
-
     const btnTipo = document.getElementById("filtro-btn");
     const menuTipo = document.getElementById("menu-tipo");
-
+    const btnCelActions = document.querySelectorAll(".btn-cel-actions")
     const tabla = document.getElementById("tabla-movimientos");
     const botonVerMas = document.getElementById("btn-more");
 
@@ -13,9 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let mostradas = LIMITE_INICIAL;
     let filtroActivo = "todos"; // 🔸 Filtro actual
 
-    // =========================================================
-    // 🔸 TOGGLE MENÚ GENÉRICO
-    // =========================================================
+    // función para mostrar/ocultar menu de la barra de filtros
     function toggleMenu(boton, menu, otrosMenus = []) {
         menu.style.display = "none";
 
@@ -71,10 +68,8 @@ document.addEventListener("DOMContentLoaded", () => {
             menuOrdenar.querySelectorAll("span").forEach(s => s.classList.remove("activo"));
             if (option.classList.contains('activo')) {
                 option.classList.remove('activo');
-                quitarFiltro(); // función externa que deshace filtro aplicado
             } else {
                 option.classList.add('activo');
-                aplicarFiltro(); // función externa que aplica filtro
             }
         });
     });
@@ -86,15 +81,18 @@ document.addEventListener("DOMContentLoaded", () => {
         option.addEventListener("click", () => {
             const tipo = option.dataset.tipo;
 
+            // Quitar la clase 'activo' de todos los spans primero
+            menuTipo.querySelectorAll("span").forEach(s => s.classList.remove("activo"));
+
+            // Si el mismo filtro ya estaba activo → mostrar todos
             if (filtroActivo === tipo) {
                 filtroActivo = "todos";
-                menuTipo.querySelectorAll("span").forEach(s => s.classList.remove("activo"));
             } else {
                 filtroActivo = tipo;
-                menuTipo.querySelectorAll("span").forEach(s => s.classList.remove("activo"));
                 option.classList.add("activo");
             }
 
+            // Aplicar el filtro inmediatamente
             filtrarPorTipo(tabla, filtroActivo);
             resetMostrarMas();
             menuTipo.style.display = "none";
@@ -104,6 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // =========================================================
     // 🔹 BOTÓN "VER MÁS"
     // =========================================================
+
     botonVerMas.addEventListener("click", () => {
         mostradas += INCREMENTO;
         actualizarTabla();
@@ -112,11 +111,34 @@ document.addEventListener("DOMContentLoaded", () => {
     // =========================================================
     // 🔹 INICIALIZACIÓN
     // =========================================================
+    // Eliminamos cualquier filtro que esté activo al iniciar la página
     const filas = tabla.querySelectorAll("tbody tr");
     if (filas.length > 0) {
+        filtroActivo = "todos";
         filtrarPorTipo(tabla, filtroActivo);
         actualizarTabla();
+        
+        // Quitar la clase activo de las opciones del menú de tipo
+        menuTipo.querySelectorAll("span").forEach(s => s.classList.remove("activo"));
     }
+    document.querySelectorAll(".btn-cel-actions").forEach((btn) => {
+        btn.addEventListener("click", (event) => {
+            let menu = btn.nextElementSibling; 
+            console.log(menu)
+            if (!menu) return;
+
+            if(menu.classList.contains("active-actions")){
+                menu.classList.remove("active-actions")
+                return
+            }
+            // Ocultar todos los menús
+            document.querySelectorAll(".menu-cel-actions").forEach(m => m.classList.remove("active-actions"));
+
+            // Mostrar solo el menú de esta fila
+            menu.classList.add("active-actions")
+            
+        });
+    });
 });
 
 // =========================================================
@@ -161,5 +183,3 @@ function filtrarPorTipo(table, tipo) {
         
     });
 }
-
-
