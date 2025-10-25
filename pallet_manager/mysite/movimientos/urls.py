@@ -8,6 +8,7 @@ urlpatterns = [
     path('exportar_csv/', views.exportar_csv, name='exportar_csv'),
     path('exportar_pdf/', views.exportar_pdf, name='exportar_pdf'),
     path("remito/<int:movimiento_id>/", views.ver_remito, name="ver_remito"),
+    path("remito/<int:movimiento_id>/pdf/", views.generar_remito_pdf, name="generar_remito_pdf"),
     path('ingresar/', views.ingresar_movimiento, name='ingresar_movimiento'),
     path('registrar/', views.registrar_movimiento, name='registrar_movimiento'),
     path('gestion-stock/', views.gestion_stock, name='gestion_stock'),
