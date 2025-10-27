@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const tabla = document.getElementById("tabla-movimientos");
     const botonVerMas = document.getElementById("btn-more");
 
+    // definimos variables para cantidad inicial y el incremento de filas a mostrar
     const LIMITE_INICIAL = 8;
-    const INCREMENTO = 10;
     let mostradas = LIMITE_INICIAL;
     let filtroActivo = "todos"; // 🔸 Filtro actual
 
@@ -104,8 +104,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // =========================================================
 
     botonVerMas.addEventListener("click", () => {
-        mostradas += INCREMENTO;
-        actualizarTabla();
+        const filas = Array.from(tabla.querySelectorAll("tbody tr"));
+        const filasNoVisibles = filas.filter(f => f.style.display === "none");
+
+        filasNoVisibles.forEach((fila, i) => {
+            fila.style.display = i < mostradas ? "" : "block";
+        });
     });
 
     // =========================================================
