@@ -53,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function resetMostrarMas() {
         mostradas = LIMITE_INICIAL;
         actualizarTabla();
+        botonVerMas.style.display = mostradas >= tabla.querySelectorAll("tbody tr").length ? "none" : "";
     }
 
     // =========================================================
@@ -60,17 +61,28 @@ document.addEventListener("DOMContentLoaded", () => {
     // =========================================================
     menuOrdenar.querySelectorAll("span").forEach((option) => {
         option.addEventListener("click", () => {
-            const colIndex = parseInt(option.dataset.col);
-            sortTable(tabla, colIndex);
-            menuOrdenar.style.display = "none";
+            const tipoOrden = option.dataset.orden;
 
-            // Toggle visual de selección
-            menuOrdenar.querySelectorAll("span").forEach(s => s.classList.remove("activo"));
-            if (option.classList.contains('activo')) {
-                option.classList.remove('activo');
+            // Si el mismo filtro ya estaba activo → restaurar orden original
+            if (option.classList.contains("ordenar-activo")) {
+                option.classList.remove("ordenar-activo");
+                restaurarOrdenOriginal(tabla);
             } else {
-                option.classList.add('activo');
+                // Quitar la clase 'ordenar-activo' de los demás
+                menuOrdenar.querySelectorAll("span").forEach(s => s.classList.remove("ordenar-activo"));
+
+                // Activar el filtro actual
+                option.classList.add("ordenar-activo");
+
+                // Aplicar el orden según el criterio
+                if (tipoOrden === "sin-filtros") {
+                    restaurarOrdenOriginal(tabla);
+                } else {
+                    ordenarPorCriterio(tabla, tipoOrden);
+                }
             }
+
+            menuOrdenar.style.display = "none";
         });
     });
 
@@ -85,16 +97,20 @@ document.addEventListener("DOMContentLoaded", () => {
             menuTipo.querySelectorAll("span").forEach(s => s.classList.remove("activo"));
 
             // Si el mismo filtro ya estaba activo → mostrar todos
-            if (filtroActivo === tipo) {
+            if (tipo === "todos" || filtroActivo === tipo) {
                 filtroActivo = "todos";
+                restaurarOrdenOriginal(tabla);
+                resetMostrarMas();
+                
             } else {
                 filtroActivo = tipo;
                 option.classList.add("activo");
+                // Aplicar el filtro inmediatamente
+                filtrarPorTipo(tabla, filtroActivo);
             }
 
-            // Aplicar el filtro inmediatamente
-            filtrarPorTipo(tabla, filtroActivo);
-            resetMostrarMas();
+            
+            
             menuTipo.style.display = "none";
         });
     });
@@ -107,9 +123,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const filas = Array.from(tabla.querySelectorAll("tbody tr"));
         const filasNoVisibles = filas.filter(f => f.style.display === "none");
 
+        // Aumentar la cantidad mostrada
+        mostradas += LIMITE_INICIAL;
+
         filasNoVisibles.forEach((fila, i) => {
             fila.style.display = i < mostradas ? "" : "block";
         });
+
+        // Ocultar el botón si ya no hay más filas ocultas
+        botonVerMas.style.display = mostradas >= filasNoVisibles.length ? "none" : "";
     });
 
     // =========================================================
@@ -174,15 +196,83 @@ function sortTable(table, colIndex) {
     rows.forEach(r => tbody.appendChild(r));
 }
 
+function ordenarPorCriterio(table, criterio) {
+    const colMap = {
+        empresa: 0,     // 🔧 ajustá estos índices al orden real de tus columnas
+        fecha: 1,
+        tipo: 2,
+        cantidad: 3,
+        responsable: 4
+    };
+
+    const colIndex = colMap[criterio];
+    if (colIndex === undefined) return;
+
+    const tbody = table.querySelector("tbody");
+    let rows = Array.from(tbody.querySelectorAll("tr"));
+
+    // 🔹 Dirección por defecto según el criterio
+    let isDesc = false;
+    if (criterio === "cantidad" || criterio === "fecha") isDesc = true;
+
+    rows.sort((a, b) => {
+        const cellA = a.children[colIndex].textContent.trim();
+        const cellB = b.children[colIndex].textContent.trim();
+
+        const numA = parseFloat(cellA.replace(",", "."));
+        const numB = parseFloat(cellB.replace(",", "."));
+        if (!isNaN(numA) && !isNaN(numB)) {
+            return isDesc ? numB - numA : numA - numB;
+        }
+
+        const dateA = Date.parse(cellA);
+        const dateB = Date.parse(cellB);
+        if (!isNaN(dateA) && !isNaN(dateB)) {
+            return isDesc ? dateB - dateA : dateA - dateB;
+        }
+
+        return isDesc ? cellB.localeCompare(cellA) : cellA.localeCompare(cellB);
+    });
+
+    tbody.innerHTML = "";
+    rows.forEach(r => tbody.appendChild(r));
+}
+
+// Guardar el orden original al cargar
+document.addEventListener("DOMContentLoaded", () => {
+    const tbody = document.querySelector("#tabla-movimientos tbody");
+    if (tbody) {
+        // Guardamos una copia del orden original de las filas
+        window.ordenOriginal = Array.from(tbody.querySelectorAll("tr")).map(tr => tr.cloneNode(true));
+    }
+});
+
+function restaurarOrdenOriginal(table) {
+    if (!window.ordenOriginal) return;
+
+    const tbody = table.querySelector("tbody");
+    tbody.innerHTML = "";
+
+    // Clonamos nuevamente las filas originales para evitar referencias rotas
+    window.ordenOriginal.forEach(tr => tbody.appendChild(tr.cloneNode(true)));
+}
 // =========================================================
 // 🔸 FILTRAR TABLA
 // =========================================================
 function filtrarPorTipo(table, tipo) {
     const filas = table.querySelectorAll("tbody tr");
+
+    if (filas.length === 0) return;
+
     filas.forEach(fila => {
         if (fila) {
             const tipoCelda = fila.children[2].textContent.trim().toLowerCase(); // columna tipo
-            fila.style.display = (tipo === "todos" || tipoCelda === tipo) ? "" : "none";
+
+            if(tipo === "egreso"){
+                fila.style.display = (tipo === "todos" || tipoCelda === "out") ? "" : "none";
+            }else if(tipo === "ingreso"){
+                fila.style.display = (tipo === "todos" || tipoCelda === "in") ? "" : "none";
+            }
         }
         
     });

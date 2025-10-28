@@ -105,6 +105,11 @@
     color: white;
 }
 
+.ordenar-activo{
+    background-color: #0BC0A2 !important;
+    color: white;
+}
+
 .menu-cel-actions{
     display: none;
 }
