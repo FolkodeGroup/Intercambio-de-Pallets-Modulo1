@@ -449,6 +449,7 @@ def gestion_stock(request):
         "stock_data": stock_data,
         "contadores": contadores,
         "tipos": tipos,
+        "title": "Movimientos",
     })
 
 
