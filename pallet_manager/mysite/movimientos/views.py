@@ -72,7 +72,7 @@ def ingresar_movimiento(request):
     context = {
         "movimiento_form": movimiento_form,
         "formset": formset,
-        "title": "Ingresar Movimiento de Pallets"
+        "title": "Movimientos"
     }
     return render(request, "movimientos/ingresar_movimiento.html", context)
 

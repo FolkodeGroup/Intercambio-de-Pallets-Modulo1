@@ -11,19 +11,22 @@
     {% include 'includes/sidebar.html' %}
 
     <main class="movimientos-main">
-        <h4 class="movimientos-main-title">{{ title }}</h4>
+        
 
         <section class="movimientos-main-section">
+            <div class="section-title-container">
+                <h4 class="movimientos-main-title">Nuevo Ingreso</h4>
+            </div>
+            <hr class="bar">
             <form method="post" style="color: #ffffff;">
                 {% csrf_token %}
 
-                <fieldset style="border: 1px solid #0D7A7F; padding: 1.25rem; margin-bottom: 1.5rem; border-radius: 6px; background-color: #07494D;">
-                    <legend style="color: #e3e3e3; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.75rem;">Datos del Ingreso</legend>
+                <fieldset class="detalle-datos">
                     {{ movimiento_form.as_p }}
                 </fieldset>
 
-                <fieldset style="border: 1px solid #0D7A7F; padding: 1.25rem; margin-bottom: 1.5rem; border-radius: 6px; background-color: #07494D;">
-                    <legend style="color: #e3e3e3; font-weight: bold; font-size: 1.1rem; margin-bottom: 0.75rem;">Detalle de Pallets</legend>
+                <fieldset class="detalle-movimiento">
+                    <legend class="detalle_movimiento-title">Detalle de Pallets</legend>
                     {{ formset.management_form }}
                     {% for form in formset %}
                         <div class="linea" style="margin-bottom: 1rem; padding: 0.75rem; background-color: #0D7A7F; border-radius: 4px;">
@@ -32,7 +35,7 @@
                     {% endfor %}
                 </fieldset>
 
-                <div style="text-align: center; margin-top: 1.5rem;">
+                <div  class="btns-nav-container" style="text-align: end; margin-top: 1.5rem;">
                     <button type="button" id="btn-back" class="btn btn-success" style="background-color: #002D33; border: none; padding: 0.5rem 1.5rem; font-size: 1rem; color: white; border-radius: 4px;">
                         Volver
                     </button>

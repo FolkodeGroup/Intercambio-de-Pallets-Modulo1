@@ -35,14 +35,24 @@ class MovimientoForm(forms.ModelForm):
             }),
             'observaciones': forms.Textarea(attrs={
                 'class': 'form-control',
-                'rows': 3,
+                'rows': 2,
                 'placeholder': 'Observaciones adicionales'
             }),
         }
 
 class IngresoMovimientoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
+        
         super().__init__(*args, **kwargs)
+
+        # Primero: usar los help_text como placeholder
+        for field in self.fields.values():
+            if field.help_text:
+                field.widget.attrs['placeholder'] = field.help_text
+
+        # Luego: eliminar los help_text para que no se muestren en el template
+        for field in self.fields.values():
+            field.help_text = None
         # 1. Filtramos el campo 'empresa' para mostrar solo proveedores
         self.fields['empresa'].queryset = Empresa.objects.filter(es_proveedor=True)
         self.fields['empresa'].label = "Proveedor"
@@ -50,13 +60,14 @@ class IngresoMovimientoForm(forms.ModelForm):
         # 2. Ocultamos el campo 'tipo' y le asignamos el valor 'IN' por defecto
         self.fields['tipo'].initial = 'IN'
         self.fields['tipo'].widget = forms.HiddenInput()
-
+        
     class Meta:
         model = Movimiento
         # Excluimos 'usuario_creacion' porque se asigna en la vista
         exclude = ['usuario_creacion', 'fecha_hora', 'estado_confirmacion']
 
 class LineaMovimientoForm(forms.ModelForm):
+    
     class Meta:
         model = LineaMovimiento
         fields = ['tipo_pallet', 'cantidad', 'motivo']
@@ -73,6 +84,12 @@ class LineaMovimientoForm(forms.ModelForm):
             }),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Eliminar los help_text de todos los campos
+        for field in self.fields.values():
+            field.help_text = None
+    
     def clean(self):
         cleaned_data = super().clean()
         cantidad = self.cleaned_data.get('cantidad')
@@ -87,6 +104,7 @@ class LineaMovimientoForm(forms.ModelForm):
             raise forms.ValidationError("El motivo debe tener al menos 3 caracteres.")
 
         return cleaned_data
+    
     
 class LineaMovimientoFormSet(BaseInlineFormSet):
     def clean(self):
