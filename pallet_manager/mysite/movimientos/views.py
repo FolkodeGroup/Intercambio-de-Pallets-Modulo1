@@ -243,7 +243,7 @@ def registrar_egreso(request):
             "titulo": "Nuevo egreso de pallets",
             "btn_label": "Registrar egreso",
             # 👇 Estas dos son importantes para el header
-            "header_title": "Ingresar Movimiento de Pallets",
+            "header_title": "Movimientos",
             "title": "Ingresar Movimiento de Pallets",
         }
 

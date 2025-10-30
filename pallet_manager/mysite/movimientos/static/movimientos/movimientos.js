@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const botonVerMas = document.getElementById("btn-more");
 
     // definimos variables para cantidad inicial y el incremento de filas a mostrar
-    const LIMITE_INICIAL = 8;
+    const LIMITE_INICIAL = 7;
     let mostradas = LIMITE_INICIAL;
     let filtroActivo = "todos"; // 🔸 Filtro actual
 

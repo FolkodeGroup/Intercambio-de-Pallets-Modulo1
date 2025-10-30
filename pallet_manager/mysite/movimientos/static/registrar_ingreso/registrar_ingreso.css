@@ -95,8 +95,9 @@ form {
     border-radius: 4px;
     color: #3B3737;
     padding: 0;
-    
+    height: 100px;
     width: 100%;
+    padding: 10px;
 }
 
 .detalle-movimiento{
@@ -178,7 +179,12 @@ form select{
     -webkit-appearance: none;   /* Safari/Chrome */
     -moz-appearance: none;      /* Firefox */
 }
-
+form select:focus{
+    outline: none;
+}
+form textarea:focus{
+    outline: none;
+}
 form input, form select{
     background-color: #D9D9D9;
     border-radius: 4px;

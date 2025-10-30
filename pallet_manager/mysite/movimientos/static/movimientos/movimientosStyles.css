@@ -38,7 +38,6 @@
 }
 
 .form-select, .btn-export{
-    font-size: 22px;
     border-radius: 25px;
     background: #01454F;
 }
@@ -160,10 +159,24 @@
 }
 
 .container-table td, .container-table th {
-    font-size: 22px;
+    font-size: 20px;
 }
 
+.btn-export:hover{
+    background-color: #0BC0A2 !important;
+    color: #002D33;
+}
 
+.btn-remito{
+    border-radius: 10px;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #fff;
+}
+.btn-remito:hover{
+    background-color: #0BC0A2 !important;
+    color: #002D33;
+}
 .btn-more{
     font-size: 25px;
     padding: 5px 0;
