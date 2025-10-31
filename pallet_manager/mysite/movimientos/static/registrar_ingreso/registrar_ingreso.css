@@ -35,10 +35,12 @@
 .btn-success{
     padding-inline: 50px !important;
     border-radius: 25px !important;
+    font-weight: 100;
+    color: rgba(255,255,255,.75) !important;
 }
 .btn-success:hover{
     background-color: #0BC0A2 !important;
-    color: #002D33;
+    color: #002D33 !important;
 }
 
 /* registrar_ingreso.css */
@@ -165,7 +167,7 @@ form {
 }
 form label {
     font-size: 22px;
-    font-weight: 600;
+    font-weight: 100;
     color: #3B3737;
     display: block;
     margin-bottom: 0.3rem;

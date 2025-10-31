@@ -49,14 +49,19 @@
     padding: 5px 10px;
     cursor: pointer;
 }
-
-.form-control{
+.input-group{
+    width: auto;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 400px;
-    padding: 5px 10px;
+    justify-content: space-around;
+    padding: 10px 20px;
     gap: 10px;
+}
+.input-group-text{
+    padding: 0px;
+}
+.form-control{
+    width: 240px !important;
+    padding: 0px;
 }
 
 .form-control input{

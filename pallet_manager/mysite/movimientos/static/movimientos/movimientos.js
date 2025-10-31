@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const menuOrdenar = document.getElementById("menu-ordenar");
     const btnTipo = document.getElementById("filtro-btn");
     const menuTipo = document.getElementById("menu-tipo");
-    const btnCelActions = document.querySelectorAll(".btn-cel-actions")
     const tabla = document.getElementById("tabla-movimientos");
     const botonVerMas = document.getElementById("btn-more");
 

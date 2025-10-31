@@ -1,0 +1,99 @@
+.content-container{
+    min-height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 10px 40px 0 40px;
+}
+.main{
+    width: 100%;
+    padding: 0 20px 40px 20px;
+}
+.main-title{
+    font-size: 40px;
+    align-self: self-start;
+    margin: 20px 0;
+}
+.btn-operation{
+    background-color: #002D33 !important;
+}
+.btn-operation:hover{
+    background-color: #0BC0A2 !important;
+    color: #002D33 !important;
+}
+.input-group{
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 20px;
+    gap: 10px;
+}
+.input-group-text{
+    padding: 0px;
+}
+.form-control{
+    width: 340px !important;
+    padding: 0px;
+}
+
+.title-table-container{
+    height: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: #0d2e33;
+    align-items: center;
+    border-top-left-radius: 5px;
+    border-top-Right-radius: 5px;
+}
+.title-table{
+    font-size: 20px;
+    margin: 0;
+}
+.table-wrapper{
+     max-height: 400px; /* ajustá según tu diseño */
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: 8px;
+}
+.table-content-cels th{
+    background-color: #C8C8C8;
+}
+.table-content-cels td, .table-content-cels th{
+    text-align: center;
+}
+.text-end{
+    position: relative;
+    text-align: center !important;
+}
+.btn-cel-actions{
+    padding: 0;
+    background-color: transparent !important;
+}
+.menu-cel-actions{
+    display: none;
+}
+.menu-cel-actions a{
+    padding: 10px;
+    background-color: #002D33 !important;
+}
+.menu-cel-actions a:hover{
+    background-color: #0BC0A2 !important;
+    color: #002D33;
+}
+.active-actions{
+    z-index: 1;
+    right: 20px;
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+}
+.btn-more{
+    font-size: 25px;
+    padding: 5px 0;
+    width: 400px;
+}
+.btn-more:hover{
+    background-color: #0BC0A2 !important;
+    color: #002D33;
+}

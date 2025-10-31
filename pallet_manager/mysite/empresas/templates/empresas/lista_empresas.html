@@ -31,11 +31,14 @@
                 </div>
             {% endif %}
             
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">               
                 <div class="input-group" style="max-width: 400px;">
-                    <span class="input-group-text pm-search-icon text-dark"><i class="bi bi-search"></i></span> 
+                    <span class="input-group-text pm-search-icon text-dark">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                    </span>
+                    {# Se añade name="q" para que la vista pueda leer lo que el usuario busca #}
                     <input type="text" class="form-control pm-search-input text-dark" id="search-input" placeholder="Buscar por Razón Social, CUIT o Ubicación..." name="q" value="{{ search_query|default:'' }}">
-                </div>                
+                </div>
                 <a href="{% url 'empresas:crear_empresa' %}" class="btn btn-primary fw-bold rounded-pill text-nowrap">
                     + Nueva empresa
                 </a>
