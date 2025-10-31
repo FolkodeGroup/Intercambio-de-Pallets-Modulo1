@@ -61,7 +61,7 @@ def lista_empresas(request):
     # Si es la carga inicial de la página completa
     else:
         context = {
-            'title': 'Gestión de Empresas',
+            'title': 'Empresas',
             'empresas': empresas_con_balance,
             'search_query': search_query,
         }

@@ -1,0 +1,11 @@
+.home-container{
+    min-height: 100%;
+    width: 100%;
+    padding: 10px 40px 0 40px;
+}
+
+.main-title{
+    font-size: 40px;
+    align-self: self-start;
+    margin: 0 !important;
+}

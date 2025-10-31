@@ -3,14 +3,22 @@
 
 {% block title %}Crear Empresa | Pallet Manager{% endblock %}
 
+{% block head %}
+    <link rel="stylesheet" href="{% static 'crear_empresa/crear_empresa.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="row justify-content-center pt-4">
     <div class="col-lg-8 col-md-10">
         <div class="px-3">
-            <div class="card bg-light p-4 p-md-5 text-dark border-0 shadow-lg"> 
+            <div class="card bg-light p-4 p-md-5 text-dark border-0 shadow-lg" style="padding: 2rem 3rem !important;"> 
                 
-                <h2 class="h4 fw-bold mb-4 text-dark">{{ title }}</h2>
+                <div class="card-title-container">
+                    <h2 class="h4 fw-bold mb-4 text-dark card-title">{{ title }}</h2>
+                </div>
                 
+                <hr class="bar">
+
                 <form method="post">
                     {% csrf_token %}
                     
@@ -58,9 +66,9 @@
 
 
                     <div class="d-flex justify-content-end">
-                        <a href="{% url 'empresas:lista_empresas' %}" class="btn btn-secondary fw-bold me-3 rounded-pill">Volver</a>
+                        <a href="{% url 'empresas:lista_empresas' %}" class="btn btn-secondary fw-bold me-3 rounded-pill btn-back">Volver</a>
                         
-                        <button type="submit" class="btn btn-primary fw-bold rounded-pill">{{ empresa|yesno:"Actualizar,Guardar" }}</button>
+                        <button type="submit" class="btn btn-primary fw-bold rounded-pill btn-submit">{{ empresa|yesno:"Actualizar,Guardar" }}</button>
                     </div>
                 </form>
             </div>
