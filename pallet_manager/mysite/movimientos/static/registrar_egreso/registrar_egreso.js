@@ -1,5 +1,10 @@
 // Esperamos a que cargue todo el contenido de la página para ejecutar el codigo
 document.addEventListener("DOMContentLoaded", () => {
+  const btnEgreso = document.getElementById('btn-egreso')
+  const btnBack = document.getElementById('btn-back');
+    btnBack.addEventListener('click', () => {
+        window.history.back(); // Vuelve a la página anterior
+    });
 
     // Confirmación (opcional) similar a Ingreso
     function getVal(name) {
@@ -33,11 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
         "Si estás segura/o, presioná Aceptar para guardar."
       );
     }
-    const btnEgreso = document.getElementById('btn-egreso')
+    
     btnEgreso.addEventListener('click', confirmarEgreso)
-    const btnBack = document.getElementById('btn-back');
-      btnBack.addEventListener('click', () => {
-        window.history.back(); // Vuelve a la página anterior
-      });
-
 })

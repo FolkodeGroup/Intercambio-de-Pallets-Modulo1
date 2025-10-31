@@ -1,0 +1,194 @@
+.movimientos-container{
+    font-family: nunito;
+    min-height: 100%;
+    width: 100%;
+    display: flex;
+    padding: 40px 40px 0px 40px;
+}
+.movimientos-main{
+    padding: 0px 20px 40px 20px;
+    width: 100%;
+}
+
+.bar{
+    width: 100%;
+    height: 2px;
+    background-color: #BCBCBC;
+    margin: 10px 0 20px 0;
+}
+.movimientos-main-title{
+    font-size: 30px;
+    color: #3B3737;
+    font-weight: bold;
+    margin: 0;
+}
+.movimientos-main-section{
+    border-radius: 10px;
+    background-color: #D9D9D9;
+    padding: 20px 40px;
+}
+.btns-nav-container{
+    display: flex;
+    justify-content: flex-end;
+    gap: 25px;
+}
+.btn-success{
+    padding-inline: 50px !important;
+    border-radius: 25px !important;
+}
+.btn-success:hover{
+    background-color: #0BC0A2 !important;
+    color: #002D33;
+}
+
+/* registrar_ingreso.css */
+form {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.detalle-datos{
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
+}
+
+.detalle-datos p:nth-child(4){
+    grid-column: 0/1;
+}
+.detalle-datos p:nth-child(2){
+    grid-row: 2/2;
+}
+.detalle-datos p:nth-child(3){
+    grid-column: 0/1;
+    grid-row: 2/3;
+}
+.detalle-datos select{
+    border-radius: 25px;
+    padding: 10px 10px 10px 20px;
+    border: none;
+    box-shadow: 0px 3px 5px 2px #BCBCBC;
+    cursor: pointer;
+}
+.detalle-datos p{
+    margin: 0;
+}
+.detalle-datos input{
+    border-radius: 10px;
+    padding: 10px 10px 10px 20px;
+    border: none;
+    box-shadow: 0px 3px 5px 2px #BCBCBC;
+}
+.detalle-datos input::placeholder{
+    color: #a0a0a0;
+}
+.detalle-datos input:focus{
+    background-color: transparent;
+    outline: 1px solid #3B3737;
+    box-shadow: none;
+}
+.detalle-datos textarea{
+    background-color: #D9D9D9;
+    border-radius: 4px;
+    color: #3B3737;
+    padding: 0;
+    height: 100px;
+    width: 100%;
+    padding: 10px;
+}
+
+.detalle-movimiento{
+    display: flex;
+    flex-direction: column;
+}
+.linea{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    background-color: transparent !important;
+    padding: 0 !important;
+    gap: 0 50px;
+}
+.linea select{
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 -960 960 960' width='24px' fill='%23000'%3E%3Cpath d='M480-345 240-585l56-56 184 183 184-183 56 56-240 240Z'/%3E%3C/svg%3E");    
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 2rem auto;
+    appearance: none;           /* elimina el estilo por defecto */
+    -webkit-appearance: none;   /* Safari/Chrome */
+    -moz-appearance: none;
+    background-color: transparent;
+    border-radius: 25px;
+    padding: 10px 10px 10px 20px;
+    border: none;
+    color: #3B3737;
+    box-shadow: 0px 3px 5px 2px #BCBCBC !important;
+    cursor: pointer;
+}
+.linea input{
+    border-radius: 10px;
+    padding: 10px 10px 10px 20px;
+    border: none;
+    box-shadow: 0px 3px 5px 2px #BCBCBC;
+    background-color: transparent;
+    color: #3B3737 !important;
+}
+.linea input::placeholder{
+    color: #a0a0a0;
+}
+.linea input:focus{
+    background-color: transparent;
+    outline: 1px solid #3B3737;
+    box-shadow: none;
+}
+.detalle_movimiento-title{
+    font-weight: 600;
+    color: #3B3737;
+    grid-column: 1/3;
+}
+.linea p:nth-child(2){
+    grid-column: 2/4;
+}
+#id_form-0-DELETE{
+    all: unset;
+    padding: 0 10px;
+    background-color: #BCBCBC;
+    border: 1px solid #002D33;
+}
+#id_form-0-DELETE:checked{
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-check-lg' viewBox='0 0 16 16'%3E%3Cpath d='M13.485 1.89a.75.75 0 0 1 1.03.165.75.75 0 0 1-.165 1.03L6.354 12.354a.75.75 0 0 1-1.06 0L1.646 8.707a.75.75 0 0 1 1.06-1.06l3.146 3.146L13.485 1.89z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 1rem auto;
+}
+form label {
+    font-size: 22px;
+    font-weight: 600;
+    color: #3B3737;
+    display: block;
+    margin-bottom: 0.3rem;
+}
+form select{
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 -960 960 960' width='24px' fill='%23000'%3E%3Cpath d='M480-345 240-585l56-56 184 183 184-183 56 56-240 240Z'/%3E%3C/svg%3E");    
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 2rem auto;
+    appearance: none;           /* elimina el estilo por defecto */
+    -webkit-appearance: none;   /* Safari/Chrome */
+    -moz-appearance: none;      /* Firefox */
+}
+form select:focus{
+    outline: none;
+}
+form textarea:focus{
+    outline: none;
+}
+form input, form select{
+    background-color: #D9D9D9;
+    border-radius: 4px;
+    color: #3B3737;
+    padding: 0.5rem;
+    width: 100%;
+}
+
+

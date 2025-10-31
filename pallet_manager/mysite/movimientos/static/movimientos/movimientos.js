@@ -3,12 +3,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const menuOrdenar = document.getElementById("menu-ordenar");
     const btnTipo = document.getElementById("filtro-btn");
     const menuTipo = document.getElementById("menu-tipo");
-    const btnCelActions = document.querySelectorAll(".btn-cel-actions")
     const tabla = document.getElementById("tabla-movimientos");
     const botonVerMas = document.getElementById("btn-more");
 
     // definimos variables para cantidad inicial y el incremento de filas a mostrar
-    const LIMITE_INICIAL = 8;
+    const LIMITE_INICIAL = 7;
     let mostradas = LIMITE_INICIAL;
     let filtroActivo = "todos"; // 🔸 Filtro actual
 

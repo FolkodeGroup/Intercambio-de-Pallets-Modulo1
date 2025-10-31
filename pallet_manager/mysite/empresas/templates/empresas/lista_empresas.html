@@ -3,58 +3,59 @@
 
 {% block title %}Empresas | Pallet Manager{% endblock %}
 
-{% block extra_head %}
-<style>
-    .table-container-collapsed {
-        max-height: 450px; /* Altura inicial limitada para la vista previa */
-        overflow-y: auto;
-    }
-</style>
+{% block head %}
+    <link rel="stylesheet" href="{% static 'lista_empresas/lista_empresas.css' %}">
 {% endblock %}
+
 
 {% block content %}
 
-<div class="container-fluid mt-4 px-4">
-    <h2 class="h4 fw-bold text-light mb-4">Gestión de Empresas</h2>
+<div class="lista-empresas-container">
+    <main class="main">
+        <h4 class="h4 text-light mb-4 main-title">Gestión de empresas</h4>
 
-    <div class="row">
-        <div class="col-12">
-            
-            {% if messages %}
-                <div class="mb-3">
-                    {% for message in messages %}
-                        <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% endfor %}
+        <div class="row">
+            <div class="col-12">
+                
+                {% if messages %}
+                    <div class="mb-3">
+                        {% for message in messages %}
+                            <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                <div class="w-auto d-flex justify-content-between align-items-center mb-4">               
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-search"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                        </span>
+                        {# Se añade name="q" para que la vista pueda leer lo que el usuario busca #}
+                        <input type="text" class="form-control pm-search-input text-dark" id="search-input" placeholder="Buscar por Razón Social, CUIT o Ubicación..." name="q" value="{{ search_query|default:'' }}">
+                    </div>
+                    <a href="{% url 'empresas:crear_empresa' %}" class="btn btn-primary fw-bold rounded-pill text-nowrap btn-operation">
+                        + Nueva empresa
+                    </a>
                 </div>
-            {% endif %}
-            
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div class="input-group" style="max-width: 400px;">
-                    <span class="input-group-text pm-search-icon text-dark"><i class="bi bi-search"></i></span> 
-                    <input type="text" class="form-control pm-search-input text-dark" id="search-input" placeholder="Buscar por Razón Social, CUIT o Ubicación..." name="q" value="{{ search_query|default:'' }}">
-                </div>                
-                <a href="{% url 'empresas:crear_empresa' %}" class="btn btn-primary fw-bold rounded-pill text-nowrap">
-                    + Nueva empresa
-                </a>
-            </div>
 
-            <div class="card pm-card p-0">
-                
-                <h2 class="h6 fw-bold text-white text-center mb-3 pt-3">Balance por empresa</h2>
-                
-                <div id="tabla-empresas-container" class="table-container-collapsed">
-                    {% include 'empresas/_tabla_empresas.html' %} 
-                </div>
-                
-                <div class="text-center mt-3 pb-3">
-                    <button type="button" class="btn pm-btn-secondary fw-bold" data-bs-toggle="modal" data-bs-target="#tablaCompletaModal">Ver más</button>
+                <div class="card pm-card p-0">
+                    
+                    <h2 class="h6 fw-bold text-white text-center mb-3 pt-3">Balance por empresa</h2>
+                    
+                    <div id="tabla-empresas-container" class="table-container-collapsed">
+                        {% include 'empresas/_tabla_empresas.html' %} 
+                    </div>
+                    
+                    <div class="text-center mt-3 pb-3">
+                        <button type="button" class="btn pm-btn-secondary fw-bold btn-more" data-bs-toggle="modal" data-bs-target="#tablaCompletaModal">Ver más</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 </div>
 
 <div class="modal fade" id="tablaCompletaModal" tabindex="-1" aria-labelledby="tablaCompletaModalLabel" aria-hidden="true">

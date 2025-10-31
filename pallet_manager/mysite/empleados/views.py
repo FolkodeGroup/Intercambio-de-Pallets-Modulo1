@@ -8,7 +8,7 @@ def vista_empleados(request):
     empleados = Empleado.objects.all() # Ahora busca los empleados en la base de datos
     context = {
         'empleados': empleados,
-        'title': 'Gestión de Empleados'
+        'title': 'Empleados'
     }
     return render(request, 'empleados/vista_empleados.html', context)
 
@@ -33,7 +33,7 @@ def crear_empleado(request):
     # Preparamos el contexto para pasarlo al template.
     context = {
         'form': form,
-        'title': 'Crear Nuevo Empleado'
+        'title': 'Empleados'
     }
     # Renderizamos el template con el formulario.
     return render(request, 'empleados/crear_empleado.html', context)

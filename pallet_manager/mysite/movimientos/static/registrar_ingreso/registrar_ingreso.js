@@ -1,5 +1,8 @@
 //  Funcionalidad a los botones para "volver"
-const btnBack = document.querySelector("#btn-back");
-btnBack.addEventListener('click', () => {
-    window.history.back();
-});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const btnBack = document.getElementById('btn-back');
+    btnBack.addEventListener('click', () => {
+        window.history.back(); // Vuelve a la página anterior
+    });
+})

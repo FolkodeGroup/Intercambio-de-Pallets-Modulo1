@@ -1,0 +1,59 @@
+.lista-empresas-container{
+    min-height: 100%;
+    width: 100%;
+
+    padding: 10px 40px 0 40px;
+}
+.main{
+    width: 100%;
+    position: relative;
+    gap: 5px;
+    padding: 0 20px 40px 20px;
+}
+.main-title{
+    font-size: 40px;
+    align-self: self-start;
+    margin: 20px 0;
+}
+
+.btn-operation{
+    background-color: #002D33 !important;
+}
+.btn-operation:hover{
+    background-color: #0BC0A2 !important;
+    color: #002D33 !important;
+}
+
+.table-container-collapsed {
+    max-height: 450px; /* Altura inicial limitada para la vista previa */
+    overflow-y: auto;
+}
+.input-group{
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 20px;
+    gap: 10px;
+    max-width: 500px;
+}
+.input-group-text{
+    padding: 0px;
+}
+.form-control{
+    width: 340px !important;
+    padding: 0px;
+}
+.form-control::placeholder{
+    font-weight: 800 ;
+}
+
+.btn-more{
+    font-weight: 100 !important;
+    font-size: 20px;
+    padding: 5px 0;
+    width: 400px;
+}
+.btn-more:hover{
+    background-color: #0BC0A2 !important;
+    color: #002D33;
+}
+

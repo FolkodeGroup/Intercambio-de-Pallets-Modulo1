@@ -14,8 +14,10 @@
     gap: 5px;
     align-items: center;
     padding: 0 20px 40px 20px;
+    
 }
 .movimientos-main-title{
+    font-size: 40px;
     align-self: self-start;
     margin: 20px 0;
 }
@@ -43,23 +45,29 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 200px;
+    width: 225px;
     padding: 5px 10px;
     cursor: pointer;
 }
-
-.form-control{
+.input-group{
+    width: auto;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 400px;
-    padding: 5px 10px;
+    justify-content: space-around;
+    padding: 10px 20px;
     gap: 10px;
+}
+.input-group-text{
+    padding: 0px;
+}
+.form-control{
+    width: 240px !important;
+    padding: 0px;
 }
 
 .form-control input{
     all: unset;
     width: 100%;
+    font-size: 20px;
 }
 
 .form-control input, .form-control svg{
@@ -155,13 +163,28 @@
     max-height: 535px;
 }
 
-.table td, .table th {
-    color: #002D33 !important;  /* o display: none */
+.container-table td, .container-table th {
+    font-size: 20px;
 }
 
+.btn-export:hover{
+    background-color: #0BC0A2 !important;
+    color: #002D33;
+}
 
+.btn-remito{
+    border-radius: 10px;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #fff;
+}
+.btn-remito:hover{
+    background-color: #0BC0A2 !important;
+    color: #002D33;
+}
 .btn-more{
     font-size: 20px;
+    font-weight: 100 !important;
     padding: 5px 0;
     width: 400px;
 }
@@ -186,6 +209,7 @@
 }
 
 .pagination-buttons button {
+    font-size: 22px;
     padding: 10px 80px;
     display: flex;
     flex-direction: column;

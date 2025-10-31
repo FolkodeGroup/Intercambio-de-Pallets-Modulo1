@@ -18,6 +18,8 @@ class EmpleadoCreationForm(UserCreationForm):
             'email': 'correo@ejemplo.com',
             'dni': 'Solo números, sin puntos',
             'telefono': '(011) 1234-5678',
+            'password1': "Ingrese una contraseña",
+            'password2': "Repita la contraseña"
         }
 
         for field_name, placeholder in field_placeholders.items():
@@ -28,6 +30,8 @@ class EmpleadoCreationForm(UserCreationForm):
                 })
         
         # Ocultar la ayuda de la contraseña, ya que Django la explica bien
+        if 'password1' in self.fields:
+            self.fields['password1'].help_text = ''
         if 'password2' in self.fields:
             self.fields['password2'].help_text = ''
 

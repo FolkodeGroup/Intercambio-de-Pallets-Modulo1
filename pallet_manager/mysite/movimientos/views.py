@@ -72,7 +72,7 @@ def ingresar_movimiento(request):
     context = {
         "movimiento_form": movimiento_form,
         "formset": formset,
-        "title": "Ingresar Movimiento de Pallets"
+        "title": "Movimientos"
     }
     return render(request, "movimientos/ingresar_movimiento.html", context)
 
@@ -243,7 +243,7 @@ def registrar_egreso(request):
             "titulo": "Nuevo egreso de pallets",
             "btn_label": "Registrar egreso",
             # 👇 Estas dos son importantes para el header
-            "header_title": "Ingresar Movimiento de Pallets",
+            "header_title": "Movimientos",
             "title": "Ingresar Movimiento de Pallets",
         }
 
@@ -449,6 +449,7 @@ def gestion_stock(request):
         "stock_data": stock_data,
         "contadores": contadores,
         "tipos": tipos,
+        "title": "Movimientos",
     })
 
 

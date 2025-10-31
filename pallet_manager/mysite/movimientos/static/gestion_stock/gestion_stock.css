@@ -1,0 +1,203 @@
+/* ===== Layout ===== */
+
+.page-wrap{
+    min-height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 10px 40px 0 40px;
+}
+.content{
+    flex:1;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    position: relative;
+}
+
+.btn-operation-container{
+    display:flex;
+    margin-bottom:12px;
+    gap:8px;
+}
+
+.btn-operation{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    gap:6px;
+}
+
+.btn-operation i{
+    display: flex;
+    align-items: center;
+    font-size: 25px;
+    font-weight: 900;
+}
+
+.btn-operation:hover, #btn-agregar:hover{
+    transition: background-color 0.3s ease;
+    background-color: #0BC0A2 !important;
+    color: white;
+}
+
+
+/* ===== Donuts (idénticos, fijos) ===== */
+.row-compact{display:flex; gap:12px; align-items:stretch; flex-wrap:wrap}
+.row-compact > *{flex:1 1 0; min-width:250px}
+.counter-card{background:#0E6166;color:#fff;border-radius:14px;padding:12px;display:flex;gap:14px;align-items:center;min-height:96px}
+
+/* unificamos el fondo de los 3 */
+.counter-card.alt-1,
+.counter-card.alt-2{background:#0E6166}
+.counter-title{font-weight:600;font-size:.95rem;margin:0;opacity:.9}
+.donut{width:78px;height:78px;flex:0 0 78px;display:block}
+.donut circle{fill:transparent;stroke-linecap:round}
+.donut .bg{stroke:#e6eceb;stroke-width:3}
+.donut .ring{stroke-width:3}  /* mismo grosor en los tres */
+.donut text{
+    font:700 12px/1 system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+    fill:#fff;
+    dominant-baseline:middle
+
+}
+.row-compact {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.counter-card svg {
+  width: 50%;
+  height: auto;
+  overflow: visible;
+}
+
+.counter-card {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  flex: 1;
+  min-width: 120px;
+}
+
+/* El texto dentro del SVG */
+.counter-card text {
+  font-size: clamp(5px, 2.5vw, 2px);
+  font-weight: 600;
+  fill: #ffffff;
+  dominant-baseline: middle;
+  text-anchor: middle;
+}
+
+/* Título arriba */
+.counter-title {
+  margin-top: 0.5rem;
+  font-size: 2rem;
+  text-align: center;
+}
+/* ===== Tabla ===== */
+.table-wrap{overflow-x:auto; background:#052e31; border-radius:10px}
+.table-morph{width:100%; border-collapse:collapse; font-size:.95rem}
+.table-morph thead{background:#0D7A7F;color:#fff}
+.table-morph th, .table-morph td{padding:.65rem .75rem}
+.table-morph tbody tr{background:#07494D;color:#fff;border-bottom:1px solid #0D7A7F}
+
+/* ===== Form ===== */
+.form-stock{
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 500px;
+    height: 700px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-30%, -60%);
+    background:#d9d9d9;
+    border-radius:16px;
+    padding:12px;
+    margin:12px auto 0;
+    color:#000;
+    font-size: 24px;
+}
+.form-label{font-weight:600}
+.form-select{
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 -960 960 960' width='24px' fill='%23000'%3E%3Cpath d='M480-345 240-585l56-56 184 183 184-183 56 56-240 240Z'/%3E%3C/svg%3E");    
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 2rem auto;
+}
+.form-select, .form-control{
+     color:#000;
+    border-radius:10px;
+}
+.form-control{
+    padding: 1rem 1rem 1rem 1.5rem;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+.form-control, .form-select{
+    width:100%;
+    max-width:100%
+}
+#fld-cantidad {
+  color: #000; /* color del número */
+  font-weight: bold; /* opcional, para resaltar */
+}
+#fld-cantidad::placeholder {
+  color: #000; /* gris suave */
+}
+
+.form-header-container h4{
+    font-size: 30px;
+    text-align: center;
+}
+
+.form-btn-cancel{
+    background: transparent ;
+    border: none;
+    color: #002d33;
+    font-size: 24px;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    cursor: pointer;
+}
+.form-btn-cancel:hover{
+    color: #0BC0A2;
+}
+
+.btn-morph{background:#002D33;color:#fff;border:0;padding:.55rem .9rem;border-radius:10px}
+.btn-morph:disabled{opacity:.6}
+.footer-actions{display:flex;justify-content:center;margin-top:10px}
+.form-stock #fld-cantidad{font-size:.95rem;box-sizing:border-box}
+/* ===== Modal oscuro (Opción B) ===== */
+.modal-content{
+  background:#0E6166;   /* fondo */
+  color:#fff;           /* texto */
+}
+.modal-header, .modal-footer{
+  border-color: rgba(255,255,255,.15);
+}
+.modal-title{
+  color:#fff;
+}
+.btn-close{
+  filter: invert(1);    /* hace la X blanca */
+}
+.footer-actions{
+    margin-top: auto;
+}
+.btn-volver{
+    font-size: 25px;
+    background-color: #002D33 !important;
+    border-radius: 30px;
+    padding: 10px 120px;
+}
+.btn-volver:hover{
+    background-color: #0BC0A2 !important;
+}
